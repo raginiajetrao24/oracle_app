@@ -149,6 +149,7 @@ class _OrganizationTreesScreenState extends State<OrganizationTreesScreen> {
                           key: ValueKey(tree.id),
                           tree: tree,
                           initiallyExpanded: false,
+                          isSelected: _selectedTree == tree,
                         ),
                       );
                     },

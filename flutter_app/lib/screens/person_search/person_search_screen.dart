@@ -1414,8 +1414,10 @@ class _PersonSearchScreenState extends State<PersonSearchScreen> {
               height: 20,
               child: Radio<String>(
                 value: value,
+                // ignore: deprecated_member_use
                 groupValue: groupValue,
                 activeColor: const Color(0xFF1F4E8C),
+                // ignore: deprecated_member_use
                 onChanged: onChanged,
               ),
             ),
