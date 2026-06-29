@@ -3,6 +3,7 @@ import '../../app/models/organization_tree_model.dart';
 import '../../app/constants/app_colors.dart';
 import 'widgets/org_tree_card.dart';
 import 'select_tree_screen.dart';
+import 'package:flutter_app/widgets/common/app_header_widget.dart';
 
 enum _TreeAction {
   createTree,
@@ -83,7 +84,9 @@ class _OrganizationTreesScreenState extends State<OrganizationTreesScreen> {
     _treeNameController.dispose();
     _advCodeController.dispose();
     _advNameController.dispose();
-    for (final c in _extraControllers.values) c.dispose();
+    for (final c in _extraControllers.values) {
+      c.dispose();
+    }
     super.dispose();
   }
 
@@ -184,7 +187,9 @@ class _OrganizationTreesScreenState extends State<OrganizationTreesScreen> {
     _treeNameController.clear();
     _advCodeController.clear();
     _advNameController.clear();
-    for (final c in _extraControllers.values) c.dispose();
+    for (final c in _extraControllers.values) {
+      c.dispose();
+    }
     setState(() {
       _codeOperator = _kOperators[0];
       _nameOperator = _kOperators[0];
@@ -199,7 +204,9 @@ class _OrganizationTreesScreenState extends State<OrganizationTreesScreen> {
       _isAdvanced = !_isAdvanced;
       // Clear extra fields when switching back to basic
       if (!_isAdvanced) {
-        for (final c in _extraControllers.values) c.dispose();
+        for (final c in _extraControllers.values) {
+          c.dispose();
+        }
         _extraFields.clear();
         _extraControllers.clear();
       }
@@ -301,34 +308,20 @@ class _OrganizationTreesScreenState extends State<OrganizationTreesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1A5CA0),
-        foregroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left_rounded, size: 28),
-          onPressed: () => Navigator.maybePop(context),
-        ),
-        title: const Text(
-          'Organization Trees',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search_rounded, size: 24),
-            onPressed: _onSearch,
-            style: IconButton.styleFrom(
-              backgroundColor: Colors.white.withValues(
-                alpha: 0.15,
-              ), // ← tinted bg
-            ),
-          ),
-          _ActionsMenu(onSelected: _handleAction),
-          const SizedBox(width: 4),
-        ],
-      ),
       body: Column(
         children: [
+          AppHeaderWidget(
+            title: 'Organization Trees',
+            showBack: true,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.search_rounded, color: Color(0xFF1F4E8C), size: 22),
+                onPressed: _onSearch,
+              ),
+              _ActionsMenu(onSelected: _handleAction),
+              const SizedBox(width: 4),
+            ],
+          ),
           _SearchPanel(
             isAdvanced: _isAdvanced,
             savedSearch: _savedSearch,

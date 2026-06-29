@@ -1,10 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/person_search/person_search_screen.dart';
 import 'package:flutter_app/screens/core_hr/person_information/person_information_screen.dart';
+import 'package:flutter_app/screens/my_team/my_team_personal_details_screen.dart';
 import 'package:flutter_app/screens/organization_trees/organization_trees_screen.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  int _selectedTabIndex = 0;
+  final List<String> _tabs = const ['Me', 'My Team', 'My Client Groups'];
+
+  List<_DashboardAction> get _currentActions {
+    switch (_selectedTabIndex) {
+      case 0:
+        return const [
+          _DashboardAction(
+            label: 'Personal Details',
+            icon: Icons.account_circle_outlined,
+            color: Color(0xFF1F4E8C),
+            screen: PersonInformationScreen(),
+          ),
+        ];
+      case 1:
+        return const [
+          _DashboardAction(
+            label: 'Personal Details',
+            icon: Icons.badge_outlined,
+            color: Color(0xFF1F4E8C),
+            screen: MyTeamPersonalDetailsScreen(),
+          ),
+          _DashboardAction(
+            label: 'Person Management',
+            icon: Icons.people_alt_outlined,
+            color: Color(0xFF4DB6AC),
+            screen: PersonSearchScreen(),
+          ),
+          _DashboardAction(
+            label: 'Assignment',
+            icon: Icons.assignment_outlined,
+            color: Color(0xFFFFC83D),
+          ),
+          _DashboardAction(
+            label: 'Hiring',
+            icon: Icons.work_outline_rounded,
+            color: Color(0xFF8B5CF6),
+          ),
+        ];
+      default:
+        return const [
+          _DashboardAction(
+            label: 'Person Management',
+            icon: Icons.person_rounded,
+            color: Color(0xFF4DB6AC),
+            screen: PersonSearchScreen(),
+          ),
+          _DashboardAction(
+            label: 'Organization Trees',
+            icon: Icons.account_tree_outlined,
+            color: Color(0xFF1F4ED8),
+            screen: OrganizationTreesScreen(),
+          ),
+          _DashboardAction(
+            label: 'New Person',
+            icon: Icons.person_add_alt_1_rounded,
+            color: Color(0xFF2E7D32),
+          ),
+        ];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +115,9 @@ class DashboardScreen extends StatelessWidget {
                     colorBlendMode: BlendMode.multiply,
                   ),
                   const SizedBox(height: 24),
-                  const Text(
-                    'Good Afternoon,',
-                    style: TextStyle(
+                  Text(
+                    _getGreeting(),
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Color(0xFF1F4E8C),
                       fontWeight: FontWeight.w500,
@@ -57,7 +125,7 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   const Text(
-                    'JOOST.KOUWENBERG',
+                    'Curtis Feitty',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
@@ -182,6 +250,9 @@ class DashboardScreen extends StatelessWidget {
               ),
             ),
 
+            // Horizontal Scrolling Menu Bar
+            _buildHorizontalTabBar(),
+
             // Quick Actions Section Title
             Padding(
               padding: const EdgeInsets.only(
@@ -259,61 +330,33 @@ class DashboardScreen extends StatelessWidget {
             ),
 
             // Quick Actions Cards Grid (2 Columns)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 1.35,
-                padding: EdgeInsets.zero,
-                children: [
-                  _buildActionCard(
-                    context,
-                    'Person Management',
-                    Icons.person_rounded,
-                    const Color(0xFF4DB6AC),
-                    const PersonSearchScreen(),
+            Builder(
+              builder: (context) {
+                final actions = _currentActions;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    childAspectRatio: 1.35,
+                    padding: EdgeInsets.zero,
+                    children: actions
+                        .map(
+                          (action) => _buildActionCard(
+                            context,
+                            action.label,
+                            action.icon,
+                            action.color,
+                            action.screen,
+                          ),
+                        )
+                        .toList(),
                   ),
-                  _buildActionCard(
-                    context,
-                    'Hiring',
-                    Icons.work_outline_rounded,
-                    const Color(0xFFFFC83D),
-                    null,
-                  ),
-                  _buildActionCard(
-                    context,
-                    'Organization Trees',
-                    Icons.account_tree_outlined,
-                    const Color(0xFF1F4ED8),
-                    const OrganizationTreesScreen(),
-                  ),
-                  _buildActionCard(
-                    context,
-                    'New Person',
-                    Icons.person_add_alt_1_rounded,
-                    const Color(0xFF4DB6AC),
-                    null,
-                  ),
-                  _buildActionCard(
-                    context,
-                    'Assignment',
-                    Icons.assignment_outlined,
-                    const Color(0xFFFFC83D),
-                    null,
-                  ),
-                  _buildActionCard(
-                    context,
-                    'Profile',
-                    Icons.account_circle_outlined,
-                    const Color(0xFF1F4E8C),
-                    const PersonInformationScreen(),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
 
             const SizedBox(height: 24),
@@ -623,4 +666,92 @@ class DashboardScreen extends StatelessWidget {
       ),
     );
   }
+
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour >= 5 && hour < 12) {
+      return 'Good Morning,';
+    } else if (hour >= 12 && hour < 17) {
+      return 'Good Afternoon,';
+    } else if (hour >= 17 && hour < 21) {
+      return 'Good Evening,';
+    } else {
+      return 'Good Night,';
+    }
+  }
+
+  Widget _buildHorizontalTabBar() {
+    return Container(
+      height: 45,
+      margin: const EdgeInsets.only(top: 16, bottom: 8),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0), width: 1)),
+      ),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        itemCount: _tabs.length,
+        itemBuilder: (context, index) {
+          final isSelected = _selectedTabIndex == index;
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              setState(() {
+                _selectedTabIndex = index;
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.only(right: 28),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 4),
+                  Text(
+                    _tabs[index],
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.w500,
+                      color: isSelected
+                          ? const Color(0xFF1F4E8C)
+                          : const Color(0xFF7B8B9B),
+                    ),
+                  ),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    height: 3,
+                    width: isSelected ? 48 : 0,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1F4E8C),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(1.5),
+                        topRight: Radius.circular(1.5),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _DashboardAction {
+  final String label;
+  final IconData icon;
+  final Color color;
+  final Widget? screen;
+
+  const _DashboardAction({
+    required this.label,
+    required this.icon,
+    required this.color,
+    this.screen,
+  });
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/widgets/common/app_header_widget.dart';
 
 class EmployeeDetailScreen extends StatelessWidget {
   final Map<String, String> employee;
@@ -17,36 +18,17 @@ class EmployeeDetailScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFEEF5FC),
-      appBar: AppBar(
-        backgroundColor: _blue,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'Employment Details',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
+      body: Column(
+        children: [
+          const AppHeaderWidget(
+            title: 'Employment Details',
+            showBack: true,
           ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_none, color: Colors.white),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings_outlined, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                children: [
             // ── Employee Header ─────────────────────────────────────────
             _Card(
               child: Row(
@@ -489,8 +471,11 @@ class EmployeeDetailScreen extends StatelessWidget {
             const SizedBox(height: 10),
             const _ExpandRow(title: 'Collective Agreement'),
             const SizedBox(height: 24),
-          ],
-        ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

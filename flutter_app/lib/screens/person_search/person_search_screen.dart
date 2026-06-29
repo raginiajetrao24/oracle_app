@@ -4,6 +4,7 @@ import 'package:excel/excel.dart' hide Border;
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
 import 'package:flutter_app/screens/employee_detail/employee_detail_screen.dart';
+import 'package:flutter_app/widgets/common/app_header_widget.dart';
 
 class PersonSearchScreen extends StatefulWidget {
   const PersonSearchScreen({super.key});
@@ -1787,64 +1788,14 @@ class _PersonSearchScreenState extends State<PersonSearchScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFEEF5FC),
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: Color(0xFF1F4E8C)),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Header ──────────────────────────────────────────────────
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Color(0xFFC9DFF6),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(32),
-                  bottomRight: Radius.circular(32),
-                ),
-              ),
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + 32,
-                bottom: 24,
-                left: 24,
-                right: 24,
-              ),
-              child: Column(
-                children: [
-                  Image.asset(
-                    'assets/images/mannai_logo.jpeg',
-                    height: 44,
-                    fit: BoxFit.contain,
-                    color: const Color(0xFFC9DFF6),
-                    colorBlendMode: BlendMode.multiply,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Hi JOOST.KOUWENBERG',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF1F4E8C),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'Person Management',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                      color: Color(0xFF1F4E8C),
-                    ),
-                  ),
-                ],
-              ),
+            // ── Shared Header ───────────────────────────────────────────
+            const AppHeaderWidget(
+              title: 'Person Management',
+              showBack: true,
             ),
 
             Padding(

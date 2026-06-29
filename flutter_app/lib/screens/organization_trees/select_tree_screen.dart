@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../app/constants/app_colors.dart';
 import '../../../app/models/organization_tree_model.dart';
 import 'create_tree_version_screen.dart';
+import 'package:flutter_app/widgets/common/app_header_widget.dart';
 
 class SelectTreeScreen extends StatefulWidget {
   const SelectTreeScreen({super.key});
@@ -56,90 +57,63 @@ class _SelectTreeScreenState extends State<SelectTreeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          'Select a Tree',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
-      ),
       body: Column(
         children: [
-          // ── Header banner ─────────────────────────────────────────────
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-            decoration: const BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Create Tree Version',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
+          const AppHeaderWidget(
+            title: 'Select a Tree',
+            showBack: true,
+          ),
+          // ── Search bar ────────────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Container(
+              height: 44,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
                   ),
+                ],
+              ),
+              child: TextField(
+                controller: _searchController,
+                onChanged: _onSearch,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textPrimary,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  'Choose the organization tree you want to create a new version for.',
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.8),
+                decoration: InputDecoration(
+                  hintText: 'Search by name or code…',
+                  hintStyle: TextStyle(
+                    color: AppColors.textSecondary.withValues(alpha: 0.7),
                     fontSize: 13,
-                    height: 1.4,
                   ),
+                  prefixIcon: const Icon(
+                    Icons.search_rounded,
+                    size: 20,
+                    color: AppColors.textSecondary,
+                  ),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(
+                            Icons.close_rounded,
+                            size: 18,
+                            color: AppColors.textSecondary,
+                          ),
+                          onPressed: () {
+                            _searchController.clear();
+                            _onSearch('');
+                          },
+                        )
+                      : null,
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
                 ),
-                const SizedBox(height: 16),
-                // Search bar
-                Container(
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: TextField(
-                    controller: _searchController,
-                    onChanged: _onSearch,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: AppColors.textPrimary,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Search by name or code…',
-                      hintStyle: TextStyle(
-                        color: AppColors.textSecondary.withValues(alpha: 0.7),
-                        fontSize: 13,
-                      ),
-                      prefixIcon: const Icon(
-                        Icons.search_rounded,
-                        size: 20,
-                        color: AppColors.textSecondary,
-                      ),
-                      suffixIcon: _searchController.text.isNotEmpty
-                          ? IconButton(
-                              icon: const Icon(
-                                Icons.close_rounded,
-                                size: 18,
-                                color: AppColors.textSecondary,
-                              ),
-                              onPressed: () {
-                                _searchController.clear();
-                                _onSearch('');
-                              },
-                            )
-                          : null,
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
 
