@@ -12,15 +12,13 @@ class TreeDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const AppHeaderWidget(
-            title: 'Tree Details',
-            showBack: true,
-          ),
-          Expanded(
-            child: Padding(
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AppHeaderWidget(title: 'Tree Details', showBack: true),
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,9 +35,8 @@ class TreeDetailsScreen extends StatelessWidget {
                         children: [
                           Text(
                             tree.name,
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
                           TreeInfoRow(label: 'Tree Code', value: tree.code),
@@ -63,8 +60,8 @@ class TreeDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

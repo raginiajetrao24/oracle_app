@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/screens/client_groups/person_directory_screen.dart';
 import 'package:flutter_app/screens/person_search/person_search_screen.dart';
 import 'package:flutter_app/screens/core_hr/person_information/person_information_screen.dart';
+import 'package:flutter_app/screens/my_team/document_records_screen.dart';
 import 'package:flutter_app/screens/my_team/my_team_personal_details_screen.dart';
+import 'package:flutter_app/screens/notifications/notifications_screen.dart';
 import 'package:flutter_app/screens/organization_trees/organization_trees_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -41,6 +44,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             screen: PersonSearchScreen(),
           ),
           _DashboardAction(
+            label: 'Document Records',
+            icon: Icons.description_outlined,
+            color: Color(0xFF744154),
+            screen: DocumentRecordsScreen(),
+          ),
+          _DashboardAction(
             label: 'Assignment',
             icon: Icons.assignment_outlined,
             color: Color(0xFFFFC83D),
@@ -53,6 +62,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ];
       default:
         return const [
+          _DashboardAction(
+            label: 'Person',
+            icon: Icons.people_outline_rounded,
+            color: Color(0xFF00759B),
+            screen: PersonDirectoryScreen(),
+          ),
           _DashboardAction(
             label: 'Person Management',
             icon: Icons.person_rounded,
@@ -104,43 +119,59 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 left: 24,
                 right: 24,
               ),
-              child: Column(
+              child: Stack(
+                alignment: Alignment.topCenter,
                 children: [
-                  // Logo from assets
-                  Image.asset(
-                    'assets/images/mannai_logo.jpeg',
-                    height: 48,
-                    fit: BoxFit.contain,
-                    color: const Color(0xFFC9DFF6),
-                    colorBlendMode: BlendMode.multiply,
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    _getGreeting(),
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Color(0xFF1F4E8C),
-                      fontWeight: FontWeight.w500,
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: _NotificationButton(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const NotificationsScreen(),
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  const Text(
-                    'Curtis Feitty',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800,
-                      color: Color(0xFF1F4E8C),
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  const Text(
-                    'Welcome to your digital workspace',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF7B8B9B),
-                      fontWeight: FontWeight.w400,
-                    ),
+                  Column(
+                    children: [
+                      Image.asset(
+                        'assets/images/mannai_logo.jpeg',
+                        height: 48,
+                        fit: BoxFit.contain,
+                        color: const Color(0xFFC9DFF6),
+                        colorBlendMode: BlendMode.multiply,
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        _getGreeting(),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF1F4E8C),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Curtis Feitty',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF1F4E8C),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Welcome to your digital workspace',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF7B8B9B),
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -737,6 +768,61 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _NotificationButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _NotificationButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: onTap,
+        child: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: const Color(0xFF1F4E8C),
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF1F4E8C).withValues(alpha: 0.28),
+                blurRadius: 12,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              const Icon(
+                Icons.notifications_none_rounded,
+                color: Colors.white,
+                size: 23,
+              ),
+              Positioned(
+                right: 9,
+                top: 9,
+                child: Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFC83D),
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 1.2),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

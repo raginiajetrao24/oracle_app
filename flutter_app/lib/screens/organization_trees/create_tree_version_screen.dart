@@ -242,15 +242,18 @@ class _CreateTreeVersionScreenState extends State<CreateTreeVersionScreen> {
                                 },
                                 child: Row(
                                   children: [
-                                    Radio<String>(
-                                      value: 'Specific value',
-                                      groupValue: nodeType,
-                                      activeColor: AppColors.secondary,
-                                      onChanged: (val) {
-                                        setDialogState(() {
-                                          nodeType = val!;
-                                        });
-                                      },
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Icon(
+                                        nodeType == 'Specific value'
+                                            ? Icons.radio_button_checked_rounded
+                                            : Icons
+                                                  .radio_button_unchecked_rounded,
+                                        color: nodeType == 'Specific value'
+                                            ? AppColors.secondary
+                                            : AppColors.textSecondary,
+                                        size: 20,
+                                      ),
                                     ),
                                     const Expanded(
                                       child: Text(
@@ -269,15 +272,19 @@ class _CreateTreeVersionScreenState extends State<CreateTreeVersionScreen> {
                                 },
                                 child: Row(
                                   children: [
-                                    Radio<String>(
-                                      value: 'Referenced hierarchy',
-                                      groupValue: nodeType,
-                                      activeColor: AppColors.secondary,
-                                      onChanged: (val) {
-                                        setDialogState(() {
-                                          nodeType = val!;
-                                        });
-                                      },
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Icon(
+                                        nodeType == 'Referenced hierarchy'
+                                            ? Icons.radio_button_checked_rounded
+                                            : Icons
+                                                  .radio_button_unchecked_rounded,
+                                        color:
+                                            nodeType == 'Referenced hierarchy'
+                                            ? AppColors.secondary
+                                            : AppColors.textSecondary,
+                                        size: 20,
+                                      ),
                                     ),
                                     const Expanded(
                                       child: Text(

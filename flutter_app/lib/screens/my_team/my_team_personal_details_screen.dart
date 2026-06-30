@@ -17,10 +17,26 @@ class _MyTeamPersonalDetailsScreenState
   static const _muted = Color(0xFF6B7280);
 
   final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _nameFilterController = TextEditingController();
+  final TextEditingController _personNumberFilterController =
+      TextEditingController();
+  final TextEditingController _assignmentNumberFilterController =
+      TextEditingController();
+  final TextEditingController _workEmailFilterController =
+      TextEditingController();
+  final TextEditingController _workPhoneFilterController =
+      TextEditingController();
+  final TextEditingController _workerNumberFilterController =
+      TextEditingController();
+  final TextEditingController _userNameFilterController =
+      TextEditingController();
   String _reportsFilter = 'Direct reports';
   String _assignmentStatus = 'All';
+  String _managerType = 'All';
   String _workerType = 'Employee';
-  bool _primaryAssignmentOnly = true;
+  bool _primaryAssignmentOnly = false;
+  String _jobCode = 'All';
+  String _jobName = 'All';
   String _sortBy = 'Relevance';
 
   final List<Map<String, String>> _people = const [
@@ -31,6 +47,11 @@ class _MyTeamPersonalDetailsScreenState
       'assignmentNumber': 'E11000',
       'assignmentStatus': 'Active - Payroll Eligible',
       'workerType': 'Employee',
+      'managerType': 'Line Manager',
+      'jobCode': 'MIN',
+      'workPhone': '+974 4400 1100',
+      'workerNumber': 'W11000',
+      'userName': 'khalid.almajid',
       'workEmail': 'Khalid.Almajid@mannai.com.qa',
     },
     {
@@ -40,6 +61,11 @@ class _MyTeamPersonalDetailsScreenState
       'assignmentNumber': 'E657',
       'assignmentStatus': 'Active - Payroll Eligible',
       'workerType': 'Employee',
+      'managerType': 'Line Manager',
+      'jobCode': 'CCA',
+      'workPhone': '+974 4400 0657',
+      'workerNumber': 'W657',
+      'userName': 'anthony.wesley',
       'workEmail': 'anthony.wesley@mannai.com.qa',
     },
     {
@@ -49,6 +75,11 @@ class _MyTeamPersonalDetailsScreenState
       'assignmentNumber': 'E2915',
       'assignmentStatus': 'Active - Payroll Eligible',
       'workerType': 'Employee',
+      'managerType': 'Line Manager',
+      'jobCode': 'ANL',
+      'workPhone': '+974 4400 2915',
+      'workerNumber': 'W2915',
+      'userName': 'ahmed.shahin',
       'workEmail': 'ahmed.shahin@mannai.com.qa',
     },
     {
@@ -58,6 +89,11 @@ class _MyTeamPersonalDetailsScreenState
       'assignmentNumber': 'E4149',
       'assignmentStatus': 'Active - Payroll Eligible',
       'workerType': 'Employee',
+      'managerType': 'Line Manager',
+      'jobCode': 'HRG',
+      'workPhone': '+974 4400 4149',
+      'workerNumber': 'W4149',
+      'userName': 'hope.hightower',
       'workEmail': 'hope.hightower@mannai.com.qa',
     },
     {
@@ -67,6 +103,11 @@ class _MyTeamPersonalDetailsScreenState
       'assignmentNumber': 'E4308',
       'assignmentStatus': 'Active - Payroll Eligible',
       'workerType': 'Employee',
+      'managerType': 'Line Manager',
+      'jobCode': 'HRG',
+      'workPhone': '+974 4400 4308',
+      'workerNumber': 'W4308',
+      'userName': 'martin.lletget',
       'workEmail': 'martin.lletget@mannai.com.qa',
     },
     {
@@ -76,6 +117,11 @@ class _MyTeamPersonalDetailsScreenState
       'assignmentNumber': 'E4337',
       'assignmentStatus': 'Active - Payroll Eligible',
       'workerType': 'Employee',
+      'managerType': 'Line Manager',
+      'jobCode': 'PDE',
+      'workPhone': '+974 4400 4337',
+      'workerNumber': 'W4337',
+      'userName': 'sue.eden',
       'workEmail': 'sue.eden@mannai.com.qa',
     },
     {
@@ -85,6 +131,11 @@ class _MyTeamPersonalDetailsScreenState
       'assignmentNumber': 'E7631',
       'assignmentStatus': 'Inactive',
       'workerType': 'Contingent Worker',
+      'managerType': 'Line Manager',
+      'jobCode': 'HRC',
+      'workPhone': '+974 4400 7631',
+      'workerNumber': 'W7631',
+      'userName': 'junaid.mohamed',
       'workEmail': 'junaid.mohamed@mannai.com.qa',
     },
     {
@@ -94,6 +145,11 @@ class _MyTeamPersonalDetailsScreenState
       'assignmentNumber': '001234',
       'assignmentStatus': 'Active - Payroll Eligible',
       'workerType': 'Employee',
+      'managerType': 'Line Manager',
+      'jobCode': 'MGR',
+      'workPhone': '+974 4400 7667',
+      'workerNumber': 'W7667',
+      'userName': 'aisha.alma',
       'workEmail': 'aisha.alma@mannai.com.qa',
     },
   ];
@@ -101,11 +157,36 @@ class _MyTeamPersonalDetailsScreenState
   @override
   void dispose() {
     _searchController.dispose();
+    _nameFilterController.dispose();
+    _personNumberFilterController.dispose();
+    _assignmentNumberFilterController.dispose();
+    _workEmailFilterController.dispose();
+    _workPhoneFilterController.dispose();
+    _workerNumberFilterController.dispose();
+    _userNameFilterController.dispose();
     super.dispose();
   }
 
   List<Map<String, String>> get _filteredPeople {
     final query = _searchController.text.trim().toLowerCase();
+    final nameFilter = _nameFilterController.text.trim().toLowerCase();
+    final personNumberFilter = _personNumberFilterController.text
+        .trim()
+        .toLowerCase();
+    final assignmentNumberFilter = _assignmentNumberFilterController.text
+        .trim()
+        .toLowerCase();
+    final workEmailFilter = _workEmailFilterController.text
+        .trim()
+        .toLowerCase();
+    final workPhoneFilter = _workPhoneFilterController.text
+        .trim()
+        .toLowerCase();
+    final workerNumberFilter = _workerNumberFilterController.text
+        .trim()
+        .toLowerCase();
+    final userNameFilter = _userNameFilterController.text.trim().toLowerCase();
+
     final rows = _people.where((person) {
       final matchesQuery =
           query.isEmpty ||
@@ -118,9 +199,28 @@ class _MyTeamPersonalDetailsScreenState
       final matchesStatus =
           _assignmentStatus == 'All' ||
           person['assignmentStatus'] == _assignmentStatus;
+      final matchesManager =
+          _managerType == 'All' || person['managerType'] == _managerType;
       final matchesWorker =
           _workerType == 'All' || person['workerType'] == _workerType;
-      return matchesQuery && matchesStatus && matchesWorker;
+      final matchesJobCode = _jobCode == 'All' || person['jobCode'] == _jobCode;
+      final matchesJobName =
+          _jobName == 'All' || person['businessTitle'] == _jobName;
+      final matchesAttributes =
+          _containsField(person['name'], nameFilter) &&
+          _containsField(person['personNumber'], personNumberFilter) &&
+          _containsField(person['assignmentNumber'], assignmentNumberFilter) &&
+          _containsField(person['workEmail'], workEmailFilter) &&
+          _containsField(person['workPhone'], workPhoneFilter) &&
+          _containsField(person['workerNumber'], workerNumberFilter) &&
+          _containsField(person['userName'], userNameFilter);
+      return matchesQuery &&
+          matchesStatus &&
+          matchesManager &&
+          matchesWorker &&
+          matchesJobCode &&
+          matchesJobName &&
+          matchesAttributes;
     }).toList();
 
     if (_sortBy == 'Name') {
@@ -131,12 +231,26 @@ class _MyTeamPersonalDetailsScreenState
     return rows;
   }
 
+  bool _containsField(String? value, String filter) {
+    return filter.isEmpty || (value ?? '').toLowerCase().contains(filter);
+  }
+
   int get _activeFilterCount {
     var count = 0;
     if (_reportsFilter != 'Direct reports') count++;
     if (_assignmentStatus != 'All') count++;
+    if (_managerType != 'All') count++;
     if (_workerType != 'Employee') count++;
-    if (!_primaryAssignmentOnly) count++;
+    if (_primaryAssignmentOnly) count++;
+    if (_jobCode != 'All') count++;
+    if (_jobName != 'All') count++;
+    if (_nameFilterController.text.trim().isNotEmpty) count++;
+    if (_personNumberFilterController.text.trim().isNotEmpty) count++;
+    if (_assignmentNumberFilterController.text.trim().isNotEmpty) count++;
+    if (_workEmailFilterController.text.trim().isNotEmpty) count++;
+    if (_workPhoneFilterController.text.trim().isNotEmpty) count++;
+    if (_workerNumberFilterController.text.trim().isNotEmpty) count++;
+    if (_userNameFilterController.text.trim().isNotEmpty) count++;
     return count;
   }
 
@@ -145,8 +259,18 @@ class _MyTeamPersonalDetailsScreenState
       _searchController.clear();
       _reportsFilter = 'Direct reports';
       _assignmentStatus = 'All';
+      _managerType = 'All';
       _workerType = 'Employee';
-      _primaryAssignmentOnly = true;
+      _primaryAssignmentOnly = false;
+      _jobCode = 'All';
+      _jobName = 'All';
+      _nameFilterController.clear();
+      _personNumberFilterController.clear();
+      _assignmentNumberFilterController.clear();
+      _workEmailFilterController.clear();
+      _workPhoneFilterController.clear();
+      _workerNumberFilterController.clear();
+      _userNameFilterController.clear();
       _sortBy = 'Relevance';
     });
   }
@@ -154,114 +278,460 @@ class _MyTeamPersonalDetailsScreenState
   Future<void> _showFilterSheet() async {
     var reports = _reportsFilter;
     var status = _assignmentStatus;
+    var manager = _managerType;
     var worker = _workerType;
     var primaryOnly = _primaryAssignmentOnly;
+    var jobCode = _jobCode;
+    var jobName = _jobName;
+    var reportsExpanded = true;
+    var statusExpanded = true;
+    var managerExpanded = true;
+    var workerExpanded = true;
+    var jobExpanded = true;
+    var personExpanded = true;
 
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setSheetState) {
-            return Padding(
-              padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 20,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Filters',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: _text,
-                    ),
+    final nameController = TextEditingController(
+      text: _nameFilterController.text,
+    );
+    final personNumberController = TextEditingController(
+      text: _personNumberFilterController.text,
+    );
+    final assignmentNumberController = TextEditingController(
+      text: _assignmentNumberFilterController.text,
+    );
+    final workEmailController = TextEditingController(
+      text: _workEmailFilterController.text,
+    );
+    final workPhoneController = TextEditingController(
+      text: _workPhoneFilterController.text,
+    );
+    final workerNumberController = TextEditingController(
+      text: _workerNumberFilterController.text,
+    );
+    final userNameController = TextEditingController(
+      text: _userNameFilterController.text,
+    );
+    final jobCodes = {
+      'All',
+      ..._people.map((person) => person['jobCode']!),
+    }.toList();
+    final jobNames = {
+      'All',
+      ..._people.map((person) => person['businessTitle']!),
+    }.toList();
+
+    try {
+      await showModalBottomSheet<void>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+        ),
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, setSheetState) {
+              return FractionallySizedBox(
+                heightFactor: 0.92,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
-                  const SizedBox(height: 18),
-                  _buildSheetDropdown(
-                    label: 'Reports',
-                    value: reports,
-                    values: const ['Direct reports', 'All reports'],
-                    onChanged: (value) => setSheetState(() => reports = value),
-                  ),
-                  const SizedBox(height: 14),
-                  _buildSheetDropdown(
-                    label: 'Assignment Status',
-                    value: status,
-                    values: const [
-                      'All',
-                      'Active - Payroll Eligible',
-                      'Inactive',
-                    ],
-                    onChanged: (value) => setSheetState(() => status = value),
-                  ),
-                  const SizedBox(height: 14),
-                  _buildSheetDropdown(
-                    label: 'Worker Type',
-                    value: worker,
-                    values: const ['All', 'Employee', 'Contingent Worker'],
-                    onChanged: (value) => setSheetState(() => worker = value),
-                  ),
-                  const SizedBox(height: 10),
-                  SwitchListTile.adaptive(
-                    contentPadding: EdgeInsets.zero,
-                    activeThumbColor: _blue,
-                    value: primaryOnly,
-                    title: const Text(
-                      'Show primary assignment only',
-                      style: TextStyle(
-                        color: _text,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
-                    ),
-                    onChanged: (value) =>
-                        setSheetState(() => primaryOnly = value),
-                  ),
-                  const SizedBox(height: 18),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _reportsFilter = reports;
-                          _assignmentStatus = status;
-                          _workerType = worker;
-                          _primaryAssignmentOnly = primaryOnly;
-                        });
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _blue,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 18, 12, 16),
+                        child: Row(
+                          children: [
+                            const Expanded(
+                              child: Text(
+                                'Filters',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: _text,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              tooltip: 'Close filters',
+                              onPressed: () => Navigator.pop(context),
+                              icon: const Icon(
+                                Icons.close_fullscreen_rounded,
+                                color: _text,
+                                size: 20,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      child: const Text('Apply Filters'),
+                      const Divider(height: 1, color: Color(0xFFE5E7EB)),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildFilterSection(
+                                title: 'Reports',
+                                expanded: reportsExpanded,
+                                onToggle: () => setSheetState(
+                                  () => reportsExpanded = !reportsExpanded,
+                                ),
+                                children: [
+                                  _buildRadioOption(
+                                    label: 'Direct reports',
+                                    value: 'Direct reports',
+                                    groupValue: reports,
+                                    onChanged: (value) =>
+                                        setSheetState(() => reports = value),
+                                  ),
+                                  _buildRadioOption(
+                                    label: 'All reports',
+                                    value: 'All reports',
+                                    groupValue: reports,
+                                    onChanged: (value) =>
+                                        setSheetState(() => reports = value),
+                                  ),
+                                  _buildRadioOption(
+                                    label: 'Others and delegated',
+                                    value: 'Others and delegated',
+                                    groupValue: reports,
+                                    onChanged: (value) =>
+                                        setSheetState(() => reports = value),
+                                  ),
+                                ],
+                              ),
+                              _buildFilterSection(
+                                title: 'Assignment Status',
+                                expanded: statusExpanded,
+                                onToggle: () => setSheetState(
+                                  () => statusExpanded = !statusExpanded,
+                                ),
+                                children: [
+                                  _buildCheckboxOption(
+                                    label: 'Active - Payroll Eligible (13)',
+                                    value:
+                                        status == 'Active - Payroll Eligible',
+                                    onChanged: (value) => setSheetState(() {
+                                      status = value
+                                          ? 'Active - Payroll Eligible'
+                                          : 'All';
+                                    }),
+                                  ),
+                                ],
+                              ),
+                              _buildFilterSection(
+                                title: 'Manager Type',
+                                expanded: managerExpanded,
+                                onToggle: () => setSheetState(
+                                  () => managerExpanded = !managerExpanded,
+                                ),
+                                children: [
+                                  _buildCheckboxOption(
+                                    label: 'Line Manager (13)',
+                                    value: manager == 'Line Manager',
+                                    onChanged: (value) => setSheetState(() {
+                                      manager = value ? 'Line Manager' : 'All';
+                                    }),
+                                  ),
+                                ],
+                              ),
+                              SwitchListTile.adaptive(
+                                contentPadding: EdgeInsets.zero,
+                                activeThumbColor: _blue,
+                                value: primaryOnly,
+                                title: const Text(
+                                  'Show primary assignment only',
+                                  style: TextStyle(
+                                    color: _text,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                onChanged: (value) =>
+                                    setSheetState(() => primaryOnly = value),
+                              ),
+                              const SizedBox(height: 10),
+                              _buildFilterSection(
+                                title: 'Worker Type',
+                                expanded: workerExpanded,
+                                onToggle: () => setSheetState(
+                                  () => workerExpanded = !workerExpanded,
+                                ),
+                                children: [
+                                  _buildCheckboxOption(
+                                    label: 'Employee (13)',
+                                    value: worker == 'Employee',
+                                    onChanged: (value) => setSheetState(() {
+                                      worker = value ? 'Employee' : 'All';
+                                    }),
+                                  ),
+                                ],
+                              ),
+                              _buildFilterSection(
+                                title: 'Job',
+                                expanded: jobExpanded,
+                                onToggle: () => setSheetState(
+                                  () => jobExpanded = !jobExpanded,
+                                ),
+                                children: [
+                                  _buildSheetSelect(
+                                    label: 'Job Code',
+                                    value: jobCode,
+                                    values: jobCodes,
+                                    onChanged: (value) =>
+                                        setSheetState(() => jobCode = value),
+                                  ),
+                                  const SizedBox(height: 14),
+                                  _buildSheetSelect(
+                                    label: 'Job Name',
+                                    value: jobName,
+                                    values: jobNames,
+                                    onChanged: (value) =>
+                                        setSheetState(() => jobName = value),
+                                  ),
+                                ],
+                              ),
+                              _buildFilterSection(
+                                title: 'Person Attributes',
+                                expanded: personExpanded,
+                                onToggle: () => setSheetState(
+                                  () => personExpanded = !personExpanded,
+                                ),
+                                children: [
+                                  _buildSheetTextField(
+                                    label: 'Name',
+                                    controller: nameController,
+                                  ),
+                                  _buildSheetTextField(
+                                    label: 'Person Number',
+                                    controller: personNumberController,
+                                  ),
+                                  _buildSheetTextField(
+                                    label: 'Assignment Number',
+                                    controller: assignmentNumberController,
+                                  ),
+                                  _buildSheetTextField(
+                                    label: 'Work Email',
+                                    controller: workEmailController,
+                                  ),
+                                  _buildSheetTextField(
+                                    label: 'Work Phone',
+                                    controller: workPhoneController,
+                                  ),
+                                  _buildSheetTextField(
+                                    label: 'Worker Number',
+                                    controller: workerNumberController,
+                                  ),
+                                  _buildSheetTextField(
+                                    label: 'User Name',
+                                    controller: userNameController,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          border: Border(
+                            top: BorderSide(color: Color(0xFFE5E7EB)),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            OutlinedButton(
+                              onPressed: () => Navigator.pop(context),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: _text,
+                                side: const BorderSide(
+                                  color: Color(0xFFD1D5DB),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 22,
+                                  vertical: 13,
+                                ),
+                              ),
+                              child: const Text('Cancel'),
+                            ),
+                            const SizedBox(width: 12),
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  _reportsFilter = reports;
+                                  _assignmentStatus = status;
+                                  _managerType = manager;
+                                  _workerType = worker;
+                                  _primaryAssignmentOnly = primaryOnly;
+                                  _jobCode = jobCode;
+                                  _jobName = jobName;
+                                  _nameFilterController.text =
+                                      nameController.text;
+                                  _personNumberFilterController.text =
+                                      personNumberController.text;
+                                  _assignmentNumberFilterController.text =
+                                      assignmentNumberController.text;
+                                  _workEmailFilterController.text =
+                                      workEmailController.text;
+                                  _workPhoneFilterController.text =
+                                      workPhoneController.text;
+                                  _workerNumberFilterController.text =
+                                      workerNumberController.text;
+                                  _userNameFilterController.text =
+                                      userNameController.text;
+                                });
+                                Navigator.pop(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF312C2A),
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 14,
+                                ),
+                              ),
+                              child: const Text('See Results'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      );
+    } finally {
+      nameController.dispose();
+      personNumberController.dispose();
+      assignmentNumberController.dispose();
+      workEmailController.dispose();
+      workPhoneController.dispose();
+      workerNumberController.dispose();
+      userNameController.dispose();
+    }
+  }
+
+  Widget _buildFilterSection({
+    required String title,
+    required bool expanded,
+    required VoidCallback onToggle,
+    required List<Widget> children,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: onToggle,
+            borderRadius: BorderRadius.circular(6),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Icon(
+                    expanded
+                        ? Icons.keyboard_arrow_down_rounded
+                        : Icons.keyboard_arrow_right_rounded,
+                    color: _text,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: _text,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
-            );
-          },
-        );
-      },
+            ),
+          ),
+          if (expanded) ...[const SizedBox(height: 8), ...children],
+        ],
+      ),
     );
   }
 
-  Widget _buildSheetDropdown({
+  Widget _buildRadioOption({
+    required String label,
+    required String value,
+    required String groupValue,
+    required ValueChanged<String> onChanged,
+  }) {
+    final isSelected = value == groupValue;
+    return InkWell(
+      onTap: () => onChanged(value),
+      borderRadius: BorderRadius.circular(6),
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Icon(
+              isSelected
+                  ? Icons.radio_button_checked_rounded
+                  : Icons.radio_button_unchecked_rounded,
+              color: isSelected ? _blue : _text,
+              size: 22,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(color: _text, fontSize: 16),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCheckboxOption({
+    required String label,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return InkWell(
+      onTap: () => onChanged(!value),
+      child: Row(
+        children: [
+          Checkbox(
+            value: value,
+            activeColor: _blue,
+            visualDensity: VisualDensity.compact,
+            onChanged: (selected) => onChanged(selected ?? false),
+          ),
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(color: _text, fontSize: 16),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSheetSelect({
     required String label,
     required String value,
     required List<String> values,
@@ -269,21 +739,56 @@ class _MyTeamPersonalDetailsScreenState
   }) {
     return DropdownButtonFormField<String>(
       initialValue: value,
-      items: values
-          .map((item) => DropdownMenuItem(value: item, child: Text(item)))
-          .toList(),
-      onChanged: (value) {
-        if (value != null) onChanged(value);
+      isExpanded: true,
+      items: values.map((item) {
+        final display = item == 'All' ? label : item;
+        return DropdownMenuItem(value: item, child: Text(display));
+      }).toList(),
+      onChanged: (selected) {
+        if (selected != null) onChanged(selected);
       },
-      decoration: InputDecoration(
-        labelText: label,
-        filled: true,
-        fillColor: const Color(0xFFF8FAFC),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-        ),
+      decoration: _sheetInputDecoration(label),
+      icon: const Icon(Icons.keyboard_arrow_down_rounded, color: _text),
+    );
+  }
+
+  Widget _buildSheetTextField({
+    required String label,
+    required TextEditingController controller,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: TextField(
+        controller: controller,
+        style: const TextStyle(color: _text, fontSize: 15),
+        decoration: _sheetInputDecoration(label),
+      ),
+    );
+  }
+
+  InputDecoration _sheetInputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(6),
+        borderSide: const BorderSide(color: Color(0xFF9CA3AF)),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(6),
+        borderSide: const BorderSide(color: Color(0xFF9CA3AF)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(6),
+        borderSide: const BorderSide(color: _blue, width: 1.4),
+      ),
+      labelStyle: const TextStyle(
+        color: _muted,
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
       ),
     );
   }
@@ -294,12 +799,13 @@ class _MyTeamPersonalDetailsScreenState
 
     return Scaffold(
       backgroundColor: const Color(0xFFEEF5FC),
-      body: Column(
-        children: [
-          const AppHeaderWidget(title: 'Personal Details', showBack: true),
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AppHeaderWidget(title: 'Personal Details', showBack: true),
+            Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,8 +818,8 @@ class _MyTeamPersonalDetailsScreenState
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

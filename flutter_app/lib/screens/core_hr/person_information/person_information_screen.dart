@@ -5,7 +5,8 @@ class PersonInformationScreen extends StatefulWidget {
   const PersonInformationScreen({super.key});
 
   @override
-  State<PersonInformationScreen> createState() => _PersonInformationScreenState();
+  State<PersonInformationScreen> createState() =>
+      _PersonInformationScreenState();
 }
 
 class _PersonInformationScreenState extends State<PersonInformationScreen> {
@@ -193,7 +194,9 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
                 onTap: () {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Library selection is not configured.')),
+                    const SnackBar(
+                      content: Text('Library selection is not configured.'),
+                    ),
                   );
                 },
               ),
@@ -203,7 +206,9 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
                 onTap: () {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Camera selection is not configured.')),
+                    const SnackBar(
+                      content: Text('Camera selection is not configured.'),
+                    ),
                   );
                 },
               ),
@@ -257,14 +262,19 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text('Denmark Info', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Denmark Info',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   TextField(
                     controller: dkCountryController,
                     decoration: const InputDecoration(labelText: 'Country'),
                   ),
                   TextField(
                     controller: dkMaritalController,
-                    decoration: const InputDecoration(labelText: 'Marital Status'),
+                    decoration: const InputDecoration(
+                      labelText: 'Marital Status',
+                    ),
                   ),
                   TextField(
                     controller: dkStartDateController,
@@ -276,17 +286,24 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
                   ),
                   TextField(
                     controller: dkHighestEdController,
-                    decoration: const InputDecoration(labelText: 'Highest Education Level'),
+                    decoration: const InputDecoration(
+                      labelText: 'Highest Education Level',
+                    ),
                   ),
                   const SizedBox(height: 20),
-                  const Text('United States Info', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text(
+                    'United States Info',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   TextField(
                     controller: usCountryController,
                     decoration: const InputDecoration(labelText: 'Country'),
                   ),
                   TextField(
                     controller: usMaritalController,
-                    decoration: const InputDecoration(labelText: 'Marital Status'),
+                    decoration: const InputDecoration(
+                      labelText: 'Marital Status',
+                    ),
                   ),
                   TextField(
                     controller: usStartDateController,
@@ -298,7 +315,9 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
                   ),
                   TextField(
                     controller: usHighestEdController,
-                    decoration: const InputDecoration(labelText: 'Highest Education Level'),
+                    decoration: const InputDecoration(
+                      labelText: 'Highest Education Level',
+                    ),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
@@ -381,7 +400,9 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
                 ),
                 TextField(
                   controller: typeController,
-                  decoration: const InputDecoration(labelText: 'National ID Type'),
+                  decoration: const InputDecoration(
+                    labelText: 'National ID Type',
+                  ),
                 ),
                 TextField(
                   controller: idController,
@@ -393,7 +414,9 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
                 ),
                 TextField(
                   controller: expController,
-                  decoration: const InputDecoration(labelText: 'Expiration Date'),
+                  decoration: const InputDecoration(
+                    labelText: 'Expiration Date',
+                  ),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
@@ -431,19 +454,13 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF3F4F6),
-      body: Column(
-        children: [
-          // Shared app header
-          AppHeaderWidget(
-            title: 'Personal Details',
-            showBack: true,
-          ),
-
-          // Cards list
-          Expanded(
-            child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            const AppHeaderWidget(title: 'Personal Details', showBack: true),
+            Padding(
               padding: const EdgeInsets.all(16),
-              physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   _buildNameCard(),
@@ -455,12 +472,11 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
-
 
   Widget _buildCard({
     required String title,
@@ -472,10 +488,7 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFFE2E8F0),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.02),
@@ -608,7 +621,10 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: _buildField('Country for Demographic Reporting', _dkCountry),
+                child: _buildField(
+                  'Country for Demographic Reporting',
+                  _dkCountry,
+                ),
               ),
               Expanded(child: _buildField('Marital Status', _dkMaritalStatus)),
               Expanded(child: _buildField('Start Date', _dkStartDate)),
@@ -619,7 +635,9 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(child: _buildField('Gender', _dkGender)),
-              Expanded(child: _buildField('Highest Education Level', _dkHighestEd)),
+              Expanded(
+                child: _buildField('Highest Education Level', _dkHighestEd),
+              ),
               const Expanded(child: SizedBox()),
             ],
           ),
@@ -634,11 +652,17 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: _buildField('Country for Demographic Reporting', _usCountry),
+                child: _buildField(
+                  'Country for Demographic Reporting',
+                  _usCountry,
+                ),
               ),
               Expanded(child: _buildField('Marital Status', _usMaritalStatus)),
               Expanded(
-                child: _buildField('Marital Status Change Date', _usMaritalStatusChangeDate),
+                child: _buildField(
+                  'Marital Status Change Date',
+                  _usMaritalStatusChangeDate,
+                ),
               ),
             ],
           ),
@@ -648,7 +672,9 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
             children: [
               Expanded(child: _buildField('Start Date', _usStartDate)),
               Expanded(child: _buildField('Gender', _usGender)),
-              Expanded(child: _buildField('Highest Education Level', _usHighestEd)),
+              Expanded(
+                child: _buildField('Highest Education Level', _usHighestEd),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -656,9 +682,14 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: _buildField('Veteran Self-Identification Status', _usVeteranStatus),
+                child: _buildField(
+                  'Veteran Self-Identification Status',
+                  _usVeteranStatus,
+                ),
               ),
-              Expanded(child: _buildField('Disabled Veteran', _usDisabledVeteran)),
+              Expanded(
+                child: _buildField('Disabled Veteran', _usDisabledVeteran),
+              ),
               Expanded(
                 child: _buildField(
                   'Active Duty Wartime or Campaign Badge Veterans',
@@ -672,9 +703,17 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: _buildField('Armed Forces Service Medal Veteran', _usArmedForcesMedal),
+                child: _buildField(
+                  'Armed Forces Service Medal Veteran',
+                  _usArmedForcesMedal,
+                ),
               ),
-              Expanded(child: _buildField('Recently Separated Veteran', _usRecentlySeparated)),
+              Expanded(
+                child: _buildField(
+                  'Recently Separated Veteran',
+                  _usRecentlySeparated,
+                ),
+              ),
               Expanded(
                 child: _buildField(
                   'Newly Separated Veteran Discharge Date',
@@ -688,7 +727,12 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(child: _buildField('Sex at Birth', _usSexAtBirth)),
-              Expanded(child: _buildField('Regional Ethnicity or Race', _usRegionalEthnicity)),
+              Expanded(
+                child: _buildField(
+                  'Regional Ethnicity or Race',
+                  _usRegionalEthnicity,
+                ),
+              ),
               const Expanded(child: SizedBox()),
             ],
           ),
@@ -701,7 +745,11 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
           // Ethnicity list
           Row(
             children: [
-              const Icon(Icons.visibility_outlined, size: 16, color: Color(0xFF7B8B9B)),
+              const Icon(
+                Icons.visibility_outlined,
+                size: 16,
+                color: Color(0xFF7B8B9B),
+              ),
               const SizedBox(width: 8),
               const Text(
                 'Ethnicity',
@@ -715,7 +763,9 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
               GestureDetector(
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Ethnicity list is not editable.')),
+                    const SnackBar(
+                      content: Text('Ethnicity list is not editable.'),
+                    ),
                   );
                 },
                 child: const Icon(
@@ -772,7 +822,11 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
     );
   }
 
-  Widget _buildCheckbox(String label, bool value, ValueChanged<bool?> onChanged) {
+  Widget _buildCheckbox(
+    String label,
+    bool value,
+    ValueChanged<bool?> onChanged,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -784,7 +838,9 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
               value: value,
               onChanged: onChanged,
               activeColor: const Color(0xFF1F4E8C),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
             ),
           ),
           const SizedBox(width: 10),
@@ -864,14 +920,19 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(child: _buildField('Issue Date', _nationalIssueDate)),
-              Expanded(child: _buildField('Expiration Date', _nationalExpirationDate)),
+              Expanded(
+                child: _buildField('Expiration Date', _nationalExpirationDate),
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 14),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFFEEF5FC),
                         borderRadius: BorderRadius.circular(12),
@@ -919,10 +980,7 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFFE2E8F0),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.02),
@@ -949,7 +1007,11 @@ class _PersonInformationScreenState extends State<PersonInformationScreen> {
               GestureDetector(
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Disability details additions are coming soon.')),
+                    const SnackBar(
+                      content: Text(
+                        'Disability details additions are coming soon.',
+                      ),
+                    ),
                   );
                 },
                 child: const Icon(

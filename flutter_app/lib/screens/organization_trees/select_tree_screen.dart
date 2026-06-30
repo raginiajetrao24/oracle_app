@@ -57,84 +57,90 @@ class _SelectTreeScreenState extends State<SelectTreeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Column(
-        children: [
-          const AppHeaderWidget(
-            title: 'Select a Tree',
-            showBack: true,
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          const SliverToBoxAdapter(
+            child: AppHeaderWidget(title: 'Select a Tree', showBack: true),
           ),
           // ── Search bar ────────────────────────────────────────────────
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Container(
-              height: 44,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: TextField(
-                controller: _searchController,
-                onChanged: _onSearch,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: AppColors.textPrimary,
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Container(
+                height: 44,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
-                decoration: InputDecoration(
-                  hintText: 'Search by name or code…',
-                  hintStyle: TextStyle(
-                    color: AppColors.textSecondary.withValues(alpha: 0.7),
-                    fontSize: 13,
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: _onSearch,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: AppColors.textPrimary,
                   ),
-                  prefixIcon: const Icon(
-                    Icons.search_rounded,
-                    size: 20,
-                    color: AppColors.textSecondary,
+                  decoration: InputDecoration(
+                    hintText: 'Search by name or code…',
+                    hintStyle: TextStyle(
+                      color: AppColors.textSecondary.withValues(alpha: 0.7),
+                      fontSize: 13,
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.search_rounded,
+                      size: 20,
+                      color: AppColors.textSecondary,
+                    ),
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(
+                              Icons.close_rounded,
+                              size: 18,
+                              color: AppColors.textSecondary,
+                            ),
+                            onPressed: () {
+                              _searchController.clear();
+                              _onSearch('');
+                            },
+                          )
+                        : null,
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
                   ),
-                  suffixIcon: _searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(
-                            Icons.close_rounded,
-                            size: 18,
-                            color: AppColors.textSecondary,
-                          ),
-                          onPressed: () {
-                            _searchController.clear();
-                            _onSearch('');
-                          },
-                        )
-                      : null,
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
                 ),
               ),
             ),
           ),
 
           // ── List ──────────────────────────────────────────────────────
-          Expanded(
-            child: _filtered.isEmpty
-                ? _EmptySearch(query: _searchController.text)
-                : ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-                    itemCount: _filtered.length,
-                    itemBuilder: (_, i) {
-                      final tree = _filtered[i];
-                      final isSelected = _selected?.id == tree.id;
-                      return _TreeTile(
-                        tree: tree,
-                        isSelected: isSelected,
-                        onTap: () => setState(() => _selected = tree),
-                      );
-                    },
-                  ),
-          ),
+          if (_filtered.isEmpty)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: _EmptySearch(query: _searchController.text),
+            )
+          else
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+              sliver: SliverList.builder(
+                itemCount: _filtered.length,
+                itemBuilder: (_, i) {
+                  final tree = _filtered[i];
+                  final isSelected = _selected?.id == tree.id;
+                  return _TreeTile(
+                    tree: tree,
+                    isSelected: isSelected,
+                    onTap: () => setState(() => _selected = tree),
+                  );
+                },
+              ),
+            ),
         ],
       ),
 

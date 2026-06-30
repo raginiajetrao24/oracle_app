@@ -4,6 +4,8 @@ import '../../app/constants/app_colors.dart';
 import 'widgets/org_tree_card.dart';
 import 'select_tree_screen.dart';
 import 'package:flutter_app/widgets/common/app_header_widget.dart';
+import 'create_tree_screen.dart';
+import 'update_tree_screen.dart';
 
 enum _TreeAction {
   createTree,
@@ -12,9 +14,12 @@ enum _TreeAction {
   edit,
   delete,
   viewTreeVersion,
-  setStatus,
+  setStatusDraft,
+  setStatusActive,
+  setStatusInactive,
   audit,
-  flatten,
+  columnFlattening,
+  rowFlattening,
 }
 
 const List<String> _kOperators = [
@@ -277,6 +282,14 @@ class _OrganizationTreesScreenState extends State<OrganizationTreesScreen> {
   }
 
   void _handleAction(_TreeAction action) {
+    if (action == _TreeAction.createTree) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const CreateTreeScreen()),
+      );
+      return;
+    }
+
     if (action == _TreeAction.createTreeVersion) {
       Navigator.push(
         context,
@@ -284,17 +297,30 @@ class _OrganizationTreesScreenState extends State<OrganizationTreesScreen> {
       );
       return;
     }
+
+    if (action == _TreeAction.edit) {
+      final tree = _filteredTrees.isNotEmpty
+          ? _filteredTrees.first
+          : sampleOrgTrees.first;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => UpdateTreeScreen(tree: tree)),
+      );
+      return;
+    }
+
     const labels = {
-      _TreeAction.createTree: 'Create Tree',
-      _TreeAction.createTreeVersion: 'Create Tree Version',
       _TreeAction.duplicate: 'Duplicate',
-      _TreeAction.edit: 'Edit',
       _TreeAction.delete: 'Delete',
       _TreeAction.viewTreeVersion: 'View Tree Version',
-      _TreeAction.setStatus: 'Set Status',
+      _TreeAction.setStatusDraft: 'Set Status: Draft',
+      _TreeAction.setStatusActive: 'Set Status: Active',
+      _TreeAction.setStatusInactive: 'Set Status: Inactive',
       _TreeAction.audit: 'Audit',
-      _TreeAction.flatten: 'Flatten',
+      _TreeAction.columnFlattening: 'Column Flattening',
+      _TreeAction.rowFlattening: 'Row Flattening',
     };
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(labels[action] ?? ''),
@@ -308,60 +334,54 @@ class _OrganizationTreesScreenState extends State<OrganizationTreesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Column(
-        children: [
-          AppHeaderWidget(
-            title: 'Organization Trees',
-            showBack: true,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.search_rounded, color: Color(0xFF1F4E8C), size: 22),
-                onPressed: _onSearch,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 24),
+        child: Column(
+          children: [
+            const AppHeaderWidget(title: 'Organization Trees', showBack: true),
+            _SearchPanel(
+              isAdvanced: _isAdvanced,
+              savedSearch: _savedSearch,
+              savedSearchOptions: _kSavedSearches,
+              treeCodeController: _treeCodeController,
+              treeNameController: _treeNameController,
+              codeOperator: _codeOperator,
+              nameOperator: _nameOperator,
+              advCodeController: _advCodeController,
+              advNameController: _advNameController,
+              operators: _kOperators,
+              extraFields: _extraFields,
+              extraControllers: _extraControllers,
+              actionsMenu: _ActionsMenu(onSelected: _handleAction),
+              onToggleMode: _onToggleMode,
+              onSavedSearchChanged: (v) =>
+                  setState(() => _savedSearch = v ?? _savedSearch),
+              onCodeOperatorChanged: (v) =>
+                  setState(() => _codeOperator = v ?? _codeOperator),
+              onNameOperatorChanged: (v) =>
+                  setState(() => _nameOperator = v ?? _nameOperator),
+              onSearch: _onSearch,
+              onReset: _onReset,
+              onAddFields: _showAddFields,
+              onRemoveField: _onRemoveField,
+            ),
+            if (_filteredTrees.isEmpty)
+              const SizedBox(height: 280, child: _EmptyState())
+            else
+              ListView.separated(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                itemCount: _filteredTrees.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                separatorBuilder: (_, _) => const SizedBox(height: 8),
+                itemBuilder: (_, i) => OrgTreeCard(
+                  key: ValueKey(_filteredTrees[i].id),
+                  tree: _filteredTrees[i],
+                  initiallyExpanded: false,
+                ),
               ),
-              _ActionsMenu(onSelected: _handleAction),
-              const SizedBox(width: 4),
-            ],
-          ),
-          _SearchPanel(
-            isAdvanced: _isAdvanced,
-            savedSearch: _savedSearch,
-            savedSearchOptions: _kSavedSearches,
-            treeCodeController: _treeCodeController,
-            treeNameController: _treeNameController,
-            codeOperator: _codeOperator,
-            nameOperator: _nameOperator,
-            advCodeController: _advCodeController,
-            advNameController: _advNameController,
-            operators: _kOperators,
-            extraFields: _extraFields,
-            extraControllers: _extraControllers,
-            onToggleMode: _onToggleMode,
-            onSavedSearchChanged: (v) =>
-                setState(() => _savedSearch = v ?? _savedSearch),
-            onCodeOperatorChanged: (v) =>
-                setState(() => _codeOperator = v ?? _codeOperator),
-            onNameOperatorChanged: (v) =>
-                setState(() => _nameOperator = v ?? _nameOperator),
-            onSearch: _onSearch,
-            onReset: _onReset,
-            onAddFields: _showAddFields,
-            onRemoveField: _onRemoveField,
-          ),
-          Expanded(
-            child: _filteredTrees.isEmpty
-                ? const _EmptyState()
-                : ListView.separated(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                    itemCount: _filteredTrees.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 8),
-                    itemBuilder: (_, i) => OrgTreeCard(
-                      key: ValueKey(_filteredTrees[i].id),
-                      tree: _filteredTrees[i],
-                      initiallyExpanded: false,
-                    ),
-                  ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -379,6 +399,7 @@ class _SearchPanel extends StatelessWidget {
   final List<String> operators;
   final Set<String> extraFields;
   final Map<String, TextEditingController> extraControllers;
+  final Widget actionsMenu;
   final VoidCallback onToggleMode, onSearch, onReset;
   final ValueChanged<String?> onSavedSearchChanged;
   final ValueChanged<String?> onCodeOperatorChanged, onNameOperatorChanged;
@@ -398,6 +419,7 @@ class _SearchPanel extends StatelessWidget {
     required this.operators,
     required this.extraFields,
     required this.extraControllers,
+    required this.actionsMenu,
     required this.onToggleMode,
     required this.onSavedSearchChanged,
     required this.onCodeOperatorChanged,
@@ -437,15 +459,26 @@ class _SearchPanel extends StatelessWidget {
             child: Row(
               children: [
                 _ModeToggle(isAdvanced: isAdvanced, onToggle: onToggleMode),
-                const SizedBox(width: 10),
-                const Text(
-                  'Saved Search',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
+                const Spacer(),
+                actionsMenu,
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
+            child: Row(
+              children: [
+                const SizedBox(
+                  width: 78,
+                  child: Text(
+                    'Saved Search',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Container(
                     height: 32,
@@ -974,65 +1007,109 @@ class _ActionsMenu extends StatelessWidget {
   const _ActionsMenu({required this.onSelected});
 
   @override
-  Widget build(BuildContext context) => PopupMenuButton<_TreeAction>(
-    tooltip: 'Actions',
-    color: Colors.white,
-    elevation: 3,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    onSelected: onSelected,
-    itemBuilder: (_) => [
-      _item(_TreeAction.createTree, 'Create Tree', Icons.add_rounded),
-      _item(
-        _TreeAction.createTreeVersion,
-        'Create Tree Version',
-        Icons.add_box_outlined,
-      ),
-      _item(_TreeAction.duplicate, 'Duplicate', Icons.copy_outlined),
-      const PopupMenuDivider(height: 1),
-      _item(_TreeAction.edit, 'Edit', Icons.edit_outlined),
-      _item(
-        _TreeAction.delete,
-        'Delete',
-        Icons.delete_outline_rounded,
-        d: true,
-      ),
-      const PopupMenuDivider(height: 1),
-      _item(
-        _TreeAction.viewTreeVersion,
-        'View Tree Version',
-        Icons.account_tree_outlined,
-      ),
-      _item(_TreeAction.setStatus, 'Set Status', Icons.toggle_on_outlined),
-      _item(_TreeAction.audit, 'Audit', Icons.history_rounded),
-      _item(_TreeAction.flatten, 'Flatten', Icons.format_list_bulleted_rounded),
-    ],
-    child: const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Text(
-        'Actions',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
+  Widget build(BuildContext context) {
+    return MenuAnchor(
+      style: MenuStyle(
+        backgroundColor: WidgetStateProperty.all(Colors.white),
+        elevation: WidgetStateProperty.all(3),
+        shape: WidgetStateProperty.all(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
       ),
-    ),
-  );
+      builder: (context, controller, _) => InkWell(
+        onTap: () => controller.isOpen ? controller.close() : controller.open(),
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          height: 32,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.more_vert_rounded, size: 14, color: Colors.white),
+              SizedBox(width: 3),
+              Text(
+                'Actions',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      menuChildren: [
+        _item(_TreeAction.createTree, 'Create Tree', Icons.add_rounded),
+        _item(
+          _TreeAction.createTreeVersion,
+          'Create Tree Version',
+          Icons.add_box_outlined,
+        ),
+        _item(_TreeAction.duplicate, 'Duplicate', Icons.copy_outlined),
+        const Divider(height: 1, color: AppColors.border),
+        _item(_TreeAction.edit, 'Edit', Icons.edit_outlined),
+        _item(
+          _TreeAction.delete,
+          'Delete',
+          Icons.delete_outline_rounded,
+          danger: true,
+        ),
+        const Divider(height: 1, color: AppColors.border),
+        _item(
+          _TreeAction.viewTreeVersion,
+          'View Tree Version',
+          Icons.account_tree_outlined,
+        ),
+        _submenu(
+          label: 'Set Status',
+          icon: Icons.toggle_on_outlined,
+          children: [
+            _item(_TreeAction.setStatusDraft, 'Draft', null),
+            _item(_TreeAction.setStatusActive, 'Active', null),
+            _item(_TreeAction.setStatusInactive, 'Inactive', null),
+          ],
+        ),
+        _item(_TreeAction.audit, 'Audit', Icons.history_rounded),
+        _submenu(
+          label: 'Flatten',
+          icon: Icons.format_list_bulleted_rounded,
+          children: [
+            _item(_TreeAction.columnFlattening, 'Column Flattening', null),
+            _item(_TreeAction.rowFlattening, 'Row Flattening', null),
+          ],
+        ),
+      ],
+    );
+  }
 
-  PopupMenuItem<_TreeAction> _item(
+  MenuItemButton _item(
     _TreeAction v,
     String l,
-    IconData i, {
-    bool d = false,
+    IconData? i, {
+    bool danger = false,
   }) {
-    final c = d ? const Color(0xFFDC2626) : AppColors.textPrimary;
-    return PopupMenuItem(
-      value: v,
-      height: 44,
+    final c = danger ? const Color(0xFFDC2626) : AppColors.textPrimary;
+    return MenuItemButton(
+      onPressed: () => onSelected(v),
+      style: ButtonStyle(
+        foregroundColor: WidgetStateProperty.all(c),
+        padding: WidgetStateProperty.all(
+          const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        ),
+        minimumSize: WidgetStateProperty.all(const Size(190, 40)),
+      ),
       child: Row(
         children: [
-          Icon(i, size: 18, color: c),
-          const SizedBox(width: 12),
+          SizedBox(
+            width: 18,
+            child: i == null ? null : Icon(i, size: 18, color: c),
+          ),
+          const SizedBox(width: 10),
           Text(
             l,
             style: TextStyle(
@@ -1040,6 +1117,44 @@ class _ActionsMenu extends StatelessWidget {
               color: c,
               fontWeight: FontWeight.w400,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  SubmenuButton _submenu({
+    required String label,
+    required IconData icon,
+    required List<Widget> children,
+  }) {
+    return SubmenuButton(
+      style: ButtonStyle(
+        foregroundColor: WidgetStateProperty.all(AppColors.textPrimary),
+        padding: WidgetStateProperty.all(
+          const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        ),
+        minimumSize: WidgetStateProperty.all(const Size(190, 40)),
+      ),
+      menuChildren: children,
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: AppColors.textPrimary),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          const Icon(
+            Icons.chevron_right_rounded,
+            size: 18,
+            color: AppColors.textSecondary,
           ),
         ],
       ),
