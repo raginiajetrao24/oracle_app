@@ -381,14 +381,226 @@ class EmployeeDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
 
-                  const _ExpandRow(title: 'Job Details'),
-                  const SizedBox(height: 10),
-                  const _ExpandRow(
-                    title: 'Manager Details',
-                    subtitle: 'No data to display',
+                  // ── Job Details ───────────────────────────────────────────
+                  _Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        _RowHeader(title: 'Job Details'),
+                        SizedBox(height: 12),
+                        _TwoCol(
+                          items: [
+                            {'label': 'Effective Date', 'value': '-'},
+                            {'label': 'Action', 'value': 'Manager Change'},
+                            {'label': 'Action Reason', 'value': '-'},
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 10),
+
+                  // ── Manager Details ───────────────────────────────────────
+                  _Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        _RowHeader(title: 'Manager Details'),
+                        SizedBox(height: 12),
+                        _Field(
+                          label: 'Name',
+                          value: 'Active - Payroll Eligible',
+                        ),
+                        SizedBox(height: 8),
+                        _Field(
+                          label: 'Type',
+                          value: 'Line Manager',
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // ── Manage Assignments ────────────────────────────────────
+                  _Card(
+                    padding: EdgeInsets.zero,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(14),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const _RowHeader(title: 'Manage Assignments'),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: const [
+                                  Expanded(
+                                    child: _Field(
+                                      label: 'Reassign To',
+                                      value: '',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Action bar (View, Format, Detach, Wrap)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 8,
+                          ),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              top: BorderSide(color: Color(0xFFE5E7EB)),
+                              bottom: BorderSide(color: Color(0xFFE5E7EB)),
+                            ),
+                          ),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                _SmallActionChip(
+                                  label: 'View',
+                                  icon: Icons.visibility_outlined,
+                                  isActive: false,
+                                ),
+                                const SizedBox(width: 4),
+                                _SmallActionChip(
+                                  label: 'Format',
+                                  icon: Icons.format_list_bulleted,
+                                  isActive: false,
+                                ),
+                                const SizedBox(width: 4),
+                                _SmallActionChip(
+                                  label: '',
+                                  icon: Icons.close,
+                                  isActive: false,
+                                ),
+                                const SizedBox(width: 4),
+                                _SmallActionChip(
+                                  label: '',
+                                  icon: Icons.check,
+                                  isActive: true,
+                                ),
+                                const SizedBox(width: 16),
+                                const Text(
+                                  'Freeze',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Color(0xFF6B7280),
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                const Icon(
+                                  Icons.ac_unit,
+                                  size: 14,
+                                  color: Color(0xFF6B7280),
+                                ),
+                                const SizedBox(width: 10),
+                                const Text(
+                                  'Detach',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Color(0xFF6B7280),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                const Text(
+                                  'Wrap',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Color(0xFF6B7280),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        // Direct Report table header
+                        Padding(
+                          padding: const EdgeInsets.all(14),
+                          child: Column(
+                            children: [
+                              Table(
+                                border: const TableBorder(
+                                  bottom: BorderSide(color: Color(0xFFE5E7EB)),
+                                  horizontalInside: BorderSide(
+                                    color: Color(0xFFE5E7EB),
+                                    width: 0.5,
+                                  ),
+                                ),
+                                children: const [
+                                  TableRow(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: Color(0xFFE5E7EB),
+                                        ),
+                                      ),
+                                    ),
+                                    children: [
+                                      _TH('Select'),
+                                      _TH('Name'),
+                                      _TH('Direct Report'),
+                                      _TH('Proposed Manager'),
+                                    ],
+                                  ),
+                                  TableRow(
+                                    children: [
+                                      _TD('All'),
+                                      _TD('Add Subordinate'),
+                                      _TD(''),
+                                      _TD(''),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 6),
+                              const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'No data to display',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFF9CA3AF),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // ── Direct Reports ────────────────────────────────────────
                   const _ExpandRow(title: 'Direct Reports'),
+                  const SizedBox(height: 10),
+
+                  // ── Employment IT Information ─────────────────────────────
+                  _Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        _RowHeader(
+                          title: 'Employment IT Information',
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'IT Assignment Extra Information',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF6B7280),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 10),
 
                   // ── Australian Workcare ─────────────────────────────────────
@@ -409,6 +621,7 @@ class EmployeeDetailScreen extends StatelessWidget {
                             {'label': 'Industry', 'value': '-'},
                             {'label': 'Graduate or Apprentice', 'value': '-'},
                             {'label': 'Industry Classification', 'value': '-'},
+                            {'label': 'Reporting Level', 'value': '-'},
                           ],
                         ),
                       ],
@@ -436,51 +649,124 @@ class EmployeeDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
 
-                  const _ExpandRow(
-                    title: 'PAR Remarks',
-                    subtitle: 'No data to display',
-                  ),
-                  const SizedBox(height: 10),
-
-                  // ── Related Grade ───────────────────────────────────────────
+                  // ── PAR Remarks ─────────────────────────────────────────────
                   _Card(
+                    padding: EdgeInsets.zero,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const _RowHeader(title: 'Related Grade'),
-                        const SizedBox(height: 10),
-                        Table(
-                          border: const TableBorder(
-                            bottom: BorderSide(color: Color(0xFFE5E7EB)),
-                            horizontalInside: BorderSide(
-                              color: Color(0xFFE5E7EB),
-                              width: 0.5,
+                        const Padding(
+                          padding: EdgeInsets.all(14),
+                          child: _RowHeader(title: 'PAR Remarks'),
+                        ),
+                        // Action bar
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 8,
+                          ),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              top: BorderSide(color: Color(0xFFE5E7EB)),
+                              bottom: BorderSide(color: Color(0xFFE5E7EB)),
                             ),
                           ),
-                          children: const [
-                            TableRow(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(color: Color(0xFFE5E7EB)),
-                                ),
-                              ),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
                               children: [
-                                _TH('Start Date'),
-                                _TH('End Date'),
-                                _TH('Grade'),
-                                _TH('Step'),
+                                _SmallActionChip(
+                                  label: 'View',
+                                  icon: Icons.visibility_outlined,
+                                  isActive: false,
+                                ),
+                                const SizedBox(width: 4),
+                                _SmallActionChip(
+                                  label: 'Format',
+                                  icon: Icons.format_list_bulleted,
+                                  isActive: false,
+                                ),
+                                const SizedBox(width: 4),
+                                _SmallActionChip(
+                                  label: '',
+                                  icon: Icons.close,
+                                  isActive: false,
+                                ),
+                                const SizedBox(width: 4),
+                                _SmallActionChip(
+                                  label: '',
+                                  icon: Icons.check,
+                                  isActive: true,
+                                ),
+                                const SizedBox(width: 16),
+                                const Text(
+                                  'Freeze',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Color(0xFF6B7280),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                const Text(
+                                  'Detach',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Color(0xFF6B7280),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                const Text(
+                                  'Wrap',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Color(0xFF6B7280),
+                                  ),
+                                ),
                               ],
                             ),
-                          ],
+                          ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: Text(
-                            'No data to display',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Color(0xFF9CA3AF),
-                            ),
+                        // PAR table
+                        Padding(
+                          padding: const EdgeInsets.all(14),
+                          child: Column(
+                            children: [
+                              Table(
+                                border: const TableBorder(
+                                  bottom: BorderSide(color: Color(0xFFE5E7EB)),
+                                  horizontalInside: BorderSide(
+                                    color: Color(0xFFE5E7EB),
+                                    width: 0.5,
+                                  ),
+                                ),
+                                children: const [
+                                  TableRow(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: Color(0xFFE5E7EB),
+                                        ),
+                                      ),
+                                    ),
+                                    children: [
+                                      _TH('RPA Remark Code'),
+                                      _TH('PAR Command'),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 6),
+                              const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'No data to display',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFF9CA3AF),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -488,41 +774,255 @@ class EmployeeDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
 
-                  const _ExpandRow(title: 'Probation and Notice Periods'),
+                  // ── Related Grade ───────────────────────────────────────────
+                  _Card(
+                    padding: EdgeInsets.zero,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(14),
+                          child: _RowHeader(title: 'Related Grade'),
+                        ),
+                        // Action bar
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 8,
+                          ),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              top: BorderSide(color: Color(0xFFE5E7EB)),
+                              bottom: BorderSide(color: Color(0xFFE5E7EB)),
+                            ),
+                          ),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                _SmallActionChip(
+                                  label: 'View',
+                                  icon: Icons.visibility_outlined,
+                                  isActive: false,
+                                ),
+                                const SizedBox(width: 4),
+                                _SmallActionChip(
+                                  label: 'Format',
+                                  icon: Icons.format_list_bulleted,
+                                  isActive: false,
+                                ),
+                                const SizedBox(width: 4),
+                                _SmallActionChip(
+                                  label: '',
+                                  icon: Icons.close,
+                                  isActive: false,
+                                ),
+                                const SizedBox(width: 4),
+                                _SmallActionChip(
+                                  label: '',
+                                  icon: Icons.check,
+                                  isActive: true,
+                                ),
+                                const SizedBox(width: 16),
+                                const Text(
+                                  'Detach',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Color(0xFF6B7280),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                const Text(
+                                  'Wrap',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Color(0xFF6B7280),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        // Related Grade table
+                        Padding(
+                          padding: const EdgeInsets.all(14),
+                          child: Column(
+                            children: [
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Table(
+                                  defaultColumnWidth:
+                                      const IntrinsicColumnWidth(),
+                                  border: const TableBorder(
+                                    bottom:
+                                        BorderSide(color: Color(0xFFE5E7EB)),
+                                    horizontalInside: BorderSide(
+                                      color: Color(0xFFE5E7EB),
+                                      width: 0.5,
+                                    ),
+                                  ),
+                                  children: const [
+                                    TableRow(
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            color: Color(0xFFE5E7EB),
+                                          ),
+                                        ),
+                                      ),
+                                      children: [
+                                        _TH('Start Date'),
+                                        _TH('End Date'),
+                                        _TH('Primary'),
+                                        _TH('Pay Table'),
+                                        _TH('Grade'),
+                                        _TH('Step'),
+                                        _TH('Pay Basis'),
+                                        _TH('Pay Plan'),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'No data to display',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFF9CA3AF),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 10),
-                  const _ExpandRow(title: 'Work Tax Address'),
+
+                  // ── Probation and Notice Periods ────────────────────────────
+                  _Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        _RowHeader(title: 'Probation and Notice Periods'),
+                        SizedBox(height: 12),
+                        _TwoCol(
+                          items: [
+                            {'label': 'Probation Period', 'value': '-'},
+                            {'label': 'Under Period', 'value': '-'},
+                            {'label': 'Probation End Date', 'value': '-'},
+                            {'label': 'Notice Period', 'value': '-'},
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 10),
-                  const _ExpandRow(title: 'Expenses Information'),
+
+                  // ── Work Tax Address ────────────────────────────────────────
+                  _Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        _RowHeader(title: 'Work Tax Address'),
+                        SizedBox(height: 12),
+                        _Field(
+                          label: 'Work Tax Address',
+                          value: '-',
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 10),
-                  const _ExpandRow(title: 'Retirement'),
+
+                  // ── Expenses Information ───────────────────────────────────
+                  _Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        _RowHeader(title: 'Expenses Information'),
+                        SizedBox(height: 12),
+                        _Field(
+                          label: 'Default Expense Account',
+                          value: '-',
+                        ),
+                        SizedBox(height: 10),
+                        _Field(
+                          label: 'Finance Check Send To Address',
+                          value: '-',
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 10),
-                  const _ExpandRow(title: 'Collective Agreement'),
+
+                  // ── Expense Account ────────────────────────────────────────
+                  _Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        _RowHeader(title: 'Expense Account'),
+                        SizedBox(height: 12),
+                        _TwoCol(
+                          items: [
+                            {'label': 'Default Expense Account', 'value': '-'},
+                            {
+                              'label': 'Finance Check Send To Address',
+                              'value': '-',
+                            },
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // ── Retirement ─────────────────────────────────────────────
+                  _Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        _RowHeader(title: 'Retirement'),
+                        SizedBox(height: 12),
+                        _TwoCol(
+                          items: [
+                            {'label': 'Retirement Age', 'value': '-'},
+                            {'label': 'Retirement Date', 'value': '-'},
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // ── Collective Agreement ───────────────────────────────────
+                  _Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        _RowHeader(title: 'Collective Agreement'),
+                        SizedBox(height: 12),
+                        _TwoCol(
+                          items: [
+                            {'label': 'Union Member', 'value': '-'},
+                            {'label': 'Bargaining Unit', 'value': '-'},
+                            {'label': 'GHID', 'value': '-'},
+                            {'label': 'Collective Agreement', 'value': '-'},
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 24),
                 ],
               ),
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: _blue,
-        unselectedItemColor: const Color(0xFF9CA3AF),
-        currentIndex: 3,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Requests'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.check_circle_outline),
-            label: 'Approvals',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Directory'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
-          ),
-        ],
       ),
     );
   }
@@ -579,8 +1079,7 @@ class _RowHeader extends StatelessWidget {
 
 class _ExpandRow extends StatelessWidget {
   final String title;
-  final String? subtitle;
-  const _ExpandRow({required this.title, this.subtitle});
+  const _ExpandRow({required this.title});
 
   @override
   Widget build(BuildContext context) => _Card(
@@ -588,13 +1087,6 @@ class _ExpandRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _RowHeader(title: title),
-        if (subtitle != null) ...[
-          const SizedBox(height: 8),
-          Text(
-            subtitle!,
-            style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
-          ),
-        ],
       ],
     ),
   );
@@ -692,4 +1184,64 @@ class _TH extends StatelessWidget {
       ),
     ),
   );
+}
+
+class _TD extends StatelessWidget {
+  final String text;
+  const _TD(this.text);
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+    child: Text(
+      text,
+      style: const TextStyle(
+        fontSize: 12,
+        color: Color(0xFF1F2937),
+      ),
+    ),
+  );
+}
+
+class _SmallActionChip extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool isActive;
+  const _SmallActionChip({
+    required this.label,
+    required this.icon,
+    required this.isActive,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+      decoration: BoxDecoration(
+        color: isActive ? const Color(0xFF1F4E8C) : Colors.transparent,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 14,
+            color: isActive ? Colors.white : const Color(0xFF6B7280),
+          ),
+          if (label.isNotEmpty) ...[
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                color: isActive ? Colors.white : const Color(0xFF6B7280),
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
 }

@@ -1880,7 +1880,6 @@ class _PersonSearchScreenState extends State<PersonSearchScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNav(context),
     );
   }
 
@@ -2788,52 +2787,6 @@ class _PersonSearchScreenState extends State<PersonSearchScreen> {
     );
   }
 
-  // ════════════════════════════════════════════════════════════════════
-  //  Bottom Navigation
-  // ════════════════════════════════════════════════════════════════════
-  Widget _buildBottomNav(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        currentIndex: 0,
-        selectedItemColor: const Color(0xFF1F4E8C),
-        unselectedItemColor: const Color(0xFF9CA3AF),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view_rounded),
-            label: 'Menu',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_rounded),
-            label: 'Profile',
-          ),
-        ],
-        onTap: (index) {
-          if (index == 1) {
-            Navigator.popUntil(context, (route) => route.isFirst);
-          }
-        },
-      ),
-    );
-  }
 
   // ════════════════════════════════════════════════════════════════════
   //  Reusable field widgets
