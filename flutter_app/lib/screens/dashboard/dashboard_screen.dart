@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/client_groups/person_directory_screen.dart';
 import 'package:flutter_app/screens/person_search/person_search_screen.dart';
 import 'package:flutter_app/screens/core_hr/person_information/person_information_screen.dart';
+import 'package:flutter_app/screens/help_desk_requests/help_desk_requests_screen.dart';
 import 'package:flutter_app/screens/my_team/document_records_screen.dart';
 import 'package:flutter_app/screens/my_team/my_team_personal_details_screen.dart';
 import 'package:flutter_app/screens/notifications/notifications_screen.dart';
@@ -16,7 +17,12 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedTabIndex = 0;
-  final List<String> _tabs = const ['Me', 'My Team', 'My Client Groups'];
+  final List<String> _tabs = const [
+    'Me',
+    'My Team',
+    'My Client Groups',
+    'Help Desk',
+  ];
 
   List<_DashboardAction> get _currentActions {
     switch (_selectedTabIndex) {
@@ -60,7 +66,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             color: Color(0xFF8B5CF6),
           ),
         ];
-      default:
+      case 2:
         return const [
           _DashboardAction(
             label: 'Person',
@@ -86,6 +92,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
             color: Color(0xFF2E7D32),
           ),
         ];
+      case 3:
+        return const [
+          _DashboardAction(
+            label: 'Help Desk Requests',
+            icon: Icons.support_agent_rounded,
+            color: Color(0xFF0F4C81),
+            screen: HelpDeskRequestsScreen(),
+          ),
+        ];
+      default:
+        return const [];
     }
   }
 
