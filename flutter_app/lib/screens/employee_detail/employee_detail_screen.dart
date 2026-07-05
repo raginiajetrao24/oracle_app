@@ -62,15 +62,17 @@ class EmployeeDetailScreen extends StatelessWidget {
                                   color: Color(0xFF1F2937),
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              const Text(
-                                'Person Management',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Color(0xFF6B7280),
+                              if (employee['contextTitle'] != null &&
+                                  employee['contextTitle']!.isNotEmpty) ...[
+                                Text(
+                                  employee['contextTitle']!,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Color(0xFF6B7280),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 2),
+                                const SizedBox(height: 2),
+                              ],
                               Text(
                                 'Person Number: ${employee['personNumber'] ?? '-'}',
                                 style: const TextStyle(
@@ -88,49 +90,32 @@ class EmployeeDetailScreen extends StatelessWidget {
                   const SizedBox(height: 10),
 
                   // ── Work Relationship ───────────────────────────────────────
-                  _Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: const [
-                                Text(
-                                  'Work Relationship',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xFF1F2937),
-                                  ),
-                                ),
-                                SizedBox(width: 6),
-                                Icon(
-                                  Icons.info_outline,
-                                  size: 16,
-                                  color: Color(0xFF6B7280),
-                                ),
-                              ],
-                            ),
-                            const Icon(
-                              Icons.keyboard_arrow_down,
-                              color: Color(0xFF6B7280),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        const _TwoCol(
-                          items: [
-                            {
-                              'label': 'Legal Employer',
-                              'value': 'USI Legal Entity',
-                            },
-                            {'label': 'Country', 'value': 'United States'},
-                            {'label': 'Worker Type', 'value': 'Nonworker'},
-                            {'label': 'Hire Date', 'value': '1/1/22'},
-                          ],
-                        ),
+                  _ExpandableCard(
+                    title: 'Work Relationship',
+                    titleSuffix: const Icon(
+                      Icons.info_outline,
+                      size: 16,
+                      color: Color(0xFF6B7280),
+                    ),
+                    body: _TwoCol(
+                      items: [
+                        {
+                          'label': 'Legal Employer',
+                          'value':
+                              employee['legalEmployer'] ?? 'USI Legal Entity',
+                        },
+                        {
+                          'label': 'Country',
+                          'value': employee['country'] ?? 'United States',
+                        },
+                        {
+                          'label': 'Worker Type',
+                          'value': employee['personType'] ?? 'Nonworker',
+                        },
+                        {
+                          'label': 'Hire Date',
+                          'value': employee['hireDate'] ?? '1/1/22',
+                        },
                       ],
                     ),
                   ),
@@ -151,30 +136,30 @@ class EmployeeDetailScreen extends StatelessWidget {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Expanded(
+                                  Expanded(
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Assignment: Human Resources Business Partner',
-                                          style: TextStyle(
+                                          'Assignment: ${employee['assignment'] ?? 'Human Resources Business Partner'}',
+                                          style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w700,
                                             color: Color(0xFF1F2937),
                                           ),
                                         ),
-                                        SizedBox(height: 4),
+                                        const SizedBox(height: 4),
                                         Text(
-                                          'Action: Add nonworker',
-                                          style: TextStyle(
+                                          'Action: ${employee['action'] ?? 'Add nonworker'}',
+                                          style: const TextStyle(
                                             fontSize: 11,
                                             color: Color(0xFF6B7280),
                                           ),
                                         ),
                                         Text(
-                                          'Action Reason: Creation of Non-Worker',
-                                          style: TextStyle(
+                                          'Action Reason: ${employee['actionReason'] ?? 'Creation of Non-Worker'}',
+                                          style: const TextStyle(
                                             fontSize: 11,
                                             color: Color(0xFF6B7280),
                                           ),
@@ -183,10 +168,66 @@ class EmployeeDetailScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Row(
-                                    children: const [
-                                      _IconBtn(icon: Icons.edit_outlined),
-                                      SizedBox(width: 6),
-                                      _IconBtn(
+                                    children: [
+                                      PopupMenuButton<String>(
+                                        icon: const Icon(
+                                          Icons.edit_outlined,
+                                          color: _blue,
+                                          size: 20,
+                                        ),
+                                        tooltip: 'Edit Assignment',
+                                        onSelected: (value) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Selected option: $value',
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        itemBuilder: (context) => const [
+                                          PopupMenuItem(
+                                            value: 'Update',
+                                            child: Text('Update'),
+                                          ),
+                                          PopupMenuItem(
+                                            value: 'Correct',
+                                            child: Text('Correct'),
+                                          ),
+                                          PopupMenuItem(
+                                            value: 'Delete Record',
+                                            child: Text('Delete Record'),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 2),
+                                      GestureDetector(
+                                        onTap: () {},
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: _blue),
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            'View History',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: _blue,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      const _IconBtn(
                                         icon: Icons.access_time_outlined,
                                       ),
                                     ],
@@ -194,9 +235,9 @@ class EmployeeDetailScreen extends StatelessWidget {
                                 ],
                               ),
                               const SizedBox(height: 8),
-                              const Text(
-                                'Effective Start Date: 1/1/22 (1 of 1)',
-                                style: TextStyle(
+                              Text(
+                                'Effective Start Date: ${employee['effectiveStartDate'] ?? '1/1/22 (1 of 1)'}',
+                                style: const TextStyle(
                                   fontSize: 11,
                                   color: Color(0xFF6B7280),
                                 ),
@@ -244,23 +285,29 @@ class EmployeeDetailScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const _TwoCol(
+                              _TwoCol(
                                 items: [
                                   {
                                     'label': 'Assignment Number',
-                                    'value': 'N1748',
+                                    'value':
+                                        employee['assignmentNumber'] ?? 'N1748',
                                   },
                                   {
                                     'label': 'Business Unit',
-                                    'value': 'US1 Business Unit',
+                                    'value':
+                                        employee['businessUnit'] ??
+                                        'US1 Business Unit',
                                   },
                                   {
                                     'label': 'Person Type',
-                                    'value': 'Nonworker',
+                                    'value':
+                                        employee['personType'] ?? 'Nonworker',
                                   },
                                   {
                                     'label': 'Position',
-                                    'value': 'Human Resources Business Partner',
+                                    'value':
+                                        employee['position'] ??
+                                        'Human Resources Business Partner',
                                   },
                                 ],
                               ),
@@ -271,24 +318,107 @@ class EmployeeDetailScreen extends StatelessWidget {
                                   color: Color(0xFFE5E7EB),
                                 ),
                               ),
-                              const _Field(
+                              _Field(
                                 label: 'Job',
-                                value: 'Human Resources Business Partner',
+                                value:
+                                    employee['job'] ??
+                                    'Human Resources Business Partner',
                               ),
                               const SizedBox(height: 10),
-                              const _Field(
+                              _Field(
                                 label: 'Assignment Name',
-                                value: 'Human Resources Business Partner',
+                                value:
+                                    employee['assignmentName'] ??
+                                    'Human Resources Business Partner',
                               ),
                               const SizedBox(height: 12),
-                              const _TwoCol(
+                              _TwoCol(
                                 items: [
-                                  {'label': 'Grade Ladder', 'value': '-'},
-                                  {'label': 'Grade', 'value': '-'},
-                                  {'label': 'Department', 'value': '-'},
+                                  {
+                                    'label': 'Grade Ladder',
+                                    'value': employee['gradeLadder'] ?? '-',
+                                  },
+                                  {
+                                    'label': 'Grade',
+                                    'value': employee['grade'] ?? '-',
+                                  },
+                                  {
+                                    'label': 'Department',
+                                    'value': employee['department'] ?? '-',
+                                  },
                                   {
                                     'label': 'Location',
-                                    'value': 'Redwood City, US',
+                                    'value':
+                                        employee['location'] ??
+                                        'Redwood City, US',
+                                  },
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Icon(
+                                    employee['includeInProgression'] == 'Yes'
+                                        ? Icons.check_box_outlined
+                                        : Icons
+                                              .check_box_outline_blank_outlined,
+                                    size: 18,
+                                    color: _blue,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  const Text(
+                                    'Include in Grade Step Progression',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF1F2937),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              _TwoCol(
+                                items: [
+                                  {
+                                    'label': 'Working at Home',
+                                    'value': employee['workingAtHome'] ?? 'No',
+                                  },
+                                  {
+                                    'label': 'Worker Category',
+                                    'value': employee['workerCategory'] ?? '-',
+                                  },
+                                  {
+                                    'label': 'Assignment Category',
+                                    'value':
+                                        employee['assignmentCategory'] ?? '-',
+                                  },
+                                  {
+                                    'label': 'Regular or Temporary',
+                                    'value':
+                                        employee['regularOrTemporary'] ?? '-',
+                                  },
+                                  {
+                                    'label': 'Full Time or Part Time',
+                                    'value':
+                                        employee['fullTimeOrPartTime'] ?? '-',
+                                  },
+                                  {
+                                    'label': 'Working as a Manager',
+                                    'value':
+                                        employee['workingAsManager'] ?? 'No',
+                                  },
+                                  {
+                                    'label': 'Hourly Paid or Salaried',
+                                    'value':
+                                        employee['hourlyPaidOrSalaried'] ?? '-',
+                                  },
+                                  {
+                                    'label': 'Workcare Category',
+                                    'value':
+                                        employee['workcareCategory'] ?? '-',
+                                  },
+                                  {
+                                    'label': 'Context Value',
+                                    'value': employee['contextValue'] ?? '-',
                                   },
                                 ],
                               ),
@@ -315,15 +445,51 @@ class EmployeeDetailScreen extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              const _TwoCol(
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Working Hours / Frequency',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Color(0xFF6B7280),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          '${employee['workingHours'] ?? '40'} @ ${employee['frequency'] ?? 'Weekly'}',
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(0xFF1F2937),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              _TwoCol(
                                 items: [
-                                  {'label': 'Working Hours', 'value': '40'},
                                   {
                                     'label': 'Derived Standard Working Hours',
-                                    'value': '40',
+                                    'value':
+                                        employee['derivedHours'] ?? '40 Weekly',
                                   },
-                                  {'label': 'FTE', 'value': '1'},
-                                  {'label': 'Headcount', 'value': '1'},
+                                  {
+                                    'label': 'FTE',
+                                    'value': employee['fte'] ?? '1',
+                                  },
+                                  {
+                                    'label': 'Headcount',
+                                    'value': employee['headcount'] ?? '1',
+                                  },
                                 ],
                               ),
                               const Padding(
@@ -350,9 +516,10 @@ class EmployeeDetailScreen extends StatelessWidget {
                                   color: const Color(0xFF4CAF50),
                                   borderRadius: BorderRadius.circular(99),
                                 ),
-                                child: const Text(
-                                  'Active - Payroll Eligible',
-                                  style: TextStyle(
+                                child: Text(
+                                  employee['assignmentStatus'] ??
+                                      'Active - Payroll Eligible',
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 11,
                                     fontWeight: FontWeight.w600,
@@ -360,17 +527,67 @@ class EmployeeDetailScreen extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              const _TwoCol(
+                              // Start Time / End Time on same row like desktop
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Start Time',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Color(0xFF6B7280),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          employee['startTime'] ?? '08:30 AM',
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(0xFF1F2937),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'End Time',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Color(0xFF6B7280),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          employee['endTime'] ?? '04:30 PM',
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(0xFF1F2937),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              _TwoCol(
                                 items: [
-                                  {'label': 'Primary', 'value': 'Yes'},
-                                  {'label': 'Projected End Date', 'value': '-'},
-                                  {'label': 'Start Time', 'value': '08:30 AM'},
-                                  {'label': 'End Time', 'value': '04:30 PM'},
                                   {
                                     'label': 'Basis for Seniority Calculation',
-                                    'value': 'Days',
+                                    'value':
+                                        employee['seniorityBasis'] ?? 'Days',
                                   },
-                                  {'label': 'Frequency', 'value': 'Weekly'},
                                 ],
                               ),
                             ],
@@ -382,39 +599,42 @@ class EmployeeDetailScreen extends StatelessWidget {
                   const SizedBox(height: 10),
 
                   // ── Job Details ───────────────────────────────────────────
-                  _Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        _RowHeader(title: 'Job Details'),
-                        SizedBox(height: 12),
-                        _TwoCol(
-                          items: [
-                            {'label': 'Effective Date', 'value': '-'},
-                            {'label': 'Action', 'value': 'Manager Change'},
-                            {'label': 'Action Reason', 'value': '-'},
-                          ],
-                        ),
+                  _ExpandableCard(
+                    title: 'Job Details',
+                    body: _TwoCol(
+                      items: [
+                        {
+                          'label': 'Effective Date',
+                          'value': employee['effectiveStartDate'] ?? '-',
+                        },
+                        {
+                          'label': 'Action',
+                          'value': employee['action'] ?? 'Manager Change',
+                        },
+                        {
+                          'label': 'Action Reason',
+                          'value': employee['actionReason'] ?? '-',
+                        },
                       ],
                     ),
                   ),
                   const SizedBox(height: 10),
 
                   // ── Manager Details ───────────────────────────────────────
-                  _Card(
-                    child: Column(
+                  _ExpandableCard(
+                    title:
+                        'Manager (${employee['managerName'] != null ? '1' : '0'})',
+                    body: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        _RowHeader(title: 'Manager Details'),
-                        SizedBox(height: 12),
+                      children: [
                         _Field(
                           label: 'Name',
-                          value: 'Active - Payroll Eligible',
+                          value: employee['managerName'] ?? 'Jane Smith',
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         _Field(
                           label: 'Type',
-                          value: 'Line Manager',
+                          value: employee['managerType'] ?? 'Line Manager',
                         ),
                       ],
                     ),
@@ -422,27 +642,22 @@ class EmployeeDetailScreen extends StatelessWidget {
                   const SizedBox(height: 10),
 
                   // ── Manage Assignments ────────────────────────────────────
-                  _Card(
-                    padding: EdgeInsets.zero,
-                    child: Column(
+                  _ExpandableCard(
+                    title: 'Manage Assignments',
+                    bodyPadding: EdgeInsets.zero,
+                    body: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(14),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const _RowHeader(title: 'Manage Assignments'),
-                              const SizedBox(height: 12),
-                              Row(
-                                children: const [
-                                  Expanded(
-                                    child: _Field(
-                                      label: 'Reassign To',
-                                      value: '',
-                                    ),
-                                  ),
-                                ],
+                          padding: const EdgeInsets.only(
+                            left: 14,
+                            right: 14,
+                            bottom: 14,
+                          ),
+                          child: Row(
+                            children: const [
+                              Expanded(
+                                child: _Field(label: 'Reassign To', value: ''),
                               ),
                             ],
                           ),
@@ -579,86 +794,201 @@ class EmployeeDetailScreen extends StatelessWidget {
                   const SizedBox(height: 10),
 
                   // ── Direct Reports ────────────────────────────────────────
-                  const _ExpandRow(title: 'Direct Reports'),
-                  const SizedBox(height: 10),
-
-                  // ── Employment IT Information ─────────────────────────────
-                  _Card(
-                    child: Column(
+                  _ExpandableCard(
+                    title: 'Direct Reports',
+                    bodyPadding: EdgeInsets.zero,
+                    body: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        _RowHeader(
-                          title: 'Employment IT Information',
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'IT Assignment Extra Information',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Color(0xFF6B7280),
+                      children: [
+                        if (employee['directReportName'] != null) ...[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 14),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Direct Reports Details',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: _blue,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                _TwoCol(
+                                  items: [
+                                    {
+                                      'label': 'Effective Date',
+                                      'value':
+                                          employee['directReportEffectiveDate'] ??
+                                          '7/2/26',
+                                    },
+                                    {
+                                      'label': 'Action',
+                                      'value':
+                                          employee['directReportAction'] ??
+                                          'Manager Change',
+                                    },
+                                    {
+                                      'label': 'Action Reason',
+                                      'value':
+                                          employee['directReportActionReason'] ??
+                                          '-',
+                                    },
+                                    {
+                                      'label': 'Reassign To',
+                                      'value':
+                                          employee['directReportReassignTo'] ??
+                                          '-',
+                                    },
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
+                          const SizedBox(height: 12),
+                          Padding(
+                            padding: const EdgeInsets.all(14),
+                            child: Table(
+                              border: const TableBorder(
+                                bottom: BorderSide(color: Color(0xFFE5E7EB)),
+                                horizontalInside: BorderSide(
+                                  color: Color(0xFFE5E7EB),
+                                  width: 0.5,
+                                ),
+                              ),
+                              children: [
+                                const TableRow(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: Color(0xFFE5E7EB),
+                                      ),
+                                    ),
+                                  ),
+                                  children: [
+                                    _TH('Select'),
+                                    _TH('Direct Report'),
+                                    _TH('Proposed Manager'),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 6,
+                                      ),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Icon(
+                                          Icons.check_box_outlined,
+                                          size: 18,
+                                          color: _blue,
+                                        ),
+                                      ),
+                                    ),
+                                    _TD(employee['directReportName']!),
+                                    _TD(employee['proposedManager'] ?? '-'),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ] else ...[
+                          const Padding(
+                            padding: EdgeInsets.all(14),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'No data to display',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xFF9CA3AF),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
                   const SizedBox(height: 10),
 
-                  // ── Australian Workcare ─────────────────────────────────────
-                  _Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        _RowHeader(
-                          title:
-                              'Australian Workcare Gender Equality Information',
-                        ),
-                        SizedBox(height: 12),
-                        _TwoCol(
-                          items: [
-                            {'label': 'Manager Category', 'value': '-'},
-                            {'label': 'Occupational Category', 'value': '-'},
-                            {'label': 'Employment Status', 'value': '-'},
-                            {'label': 'Industry', 'value': '-'},
-                            {'label': 'Graduate or Apprentice', 'value': '-'},
-                            {'label': 'Industry Classification', 'value': '-'},
-                            {'label': 'Reporting Level', 'value': '-'},
-                          ],
-                        ),
+                  // ── Employment IT Information ─────────────────────────────
+                  _ExpandableCard(
+                    title: 'Employment IT Information',
+                    body: const Text(
+                      'IT Assignment Extra Information',
+                      style: TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // ── Australian Workplace ────────────────────────────────────
+                  _ExpandableCard(
+                    title: 'Australian Workplace Gender Equality Information',
+                    body: _TwoCol(
+                      items: [
+                        {
+                          'label': 'Manager Category',
+                          'value': employee['managerCategory'] ?? '-',
+                        },
+                        {
+                          'label': 'Occupational Category',
+                          'value': employee['occupationalCategory'] ?? '-',
+                        },
+                        {
+                          'label': 'Employment Status',
+                          'value': employee['employmentStatus'] ?? '-',
+                        },
+                        {
+                          'label': 'Industry',
+                          'value': employee['industry'] ?? '-',
+                        },
+                        {
+                          'label': 'Graduate or Apprentice',
+                          'value': employee['graduateOrApprentice'] ?? '-',
+                        },
+                        {
+                          'label': 'Industry Classification',
+                          'value': employee['industryClassification'] ?? '-',
+                        },
+                        {
+                          'label': 'Reporting Level',
+                          'value': employee['reportingLevel'] ?? '-',
+                        },
                       ],
                     ),
                   ),
                   const SizedBox(height: 10),
 
                   // ── UK HESA ─────────────────────────────────────────────────
-                  _Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        _RowHeader(title: 'UK HESA Information'),
-                        SizedBox(height: 12),
-                        _TwoCol(
-                          items: [
-                            {'label': 'acemphls', 'value': '-'},
-                            {'label': 'clinical', 'value': '-'},
-                            {'label': 'campid', 'value': '-'},
-                            {'label': 'recon', 'value': '-'},
-                          ],
-                        ),
+                  _ExpandableCard(
+                    title: 'UK HESA Information',
+                    body: _TwoCol(
+                      items: [
+                        {
+                          'label': 'acempplan',
+                          'value': employee['acempplan'] ?? '-',
+                        },
+                        {
+                          'label': 'clinical',
+                          'value': employee['clinical'] ?? '-',
+                        },
+                        {'label': 'campid', 'value': employee['campid'] ?? '-'},
+                        {'label': 'recon', 'value': employee['recon'] ?? '-'},
                       ],
                     ),
                   ),
                   const SizedBox(height: 10),
 
                   // ── PAR Remarks ─────────────────────────────────────────────
-                  _Card(
-                    padding: EdgeInsets.zero,
-                    child: Column(
+                  _ExpandableCard(
+                    title: 'PAR Remarks',
+                    bodyPadding: EdgeInsets.zero,
+                    body: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.all(14),
-                          child: _RowHeader(title: 'PAR Remarks'),
-                        ),
                         // Action bar
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -749,7 +1079,7 @@ class EmployeeDetailScreen extends StatelessWidget {
                                       ),
                                     ),
                                     children: [
-                                      _TH('RPA Remark Code'),
+                                      _TH('PAR Remark Code'),
                                       _TH('PAR Command'),
                                     ],
                                   ),
@@ -775,15 +1105,12 @@ class EmployeeDetailScreen extends StatelessWidget {
                   const SizedBox(height: 10),
 
                   // ── Related Grade ───────────────────────────────────────────
-                  _Card(
-                    padding: EdgeInsets.zero,
-                    child: Column(
+                  _ExpandableCard(
+                    title: 'Related Grade',
+                    bodyPadding: EdgeInsets.zero,
+                    body: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.all(14),
-                          child: _RowHeader(title: 'Related Grade'),
-                        ),
                         // Action bar
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -854,8 +1181,9 @@ class EmployeeDetailScreen extends StatelessWidget {
                                   defaultColumnWidth:
                                       const IntrinsicColumnWidth(),
                                   border: const TableBorder(
-                                    bottom:
-                                        BorderSide(color: Color(0xFFE5E7EB)),
+                                    bottom: BorderSide(
+                                      color: Color(0xFFE5E7EB),
+                                    ),
                                     horizontalInside: BorderSide(
                                       color: Color(0xFFE5E7EB),
                                       width: 0.5,
@@ -904,116 +1232,91 @@ class EmployeeDetailScreen extends StatelessWidget {
                   const SizedBox(height: 10),
 
                   // ── Probation and Notice Periods ────────────────────────────
-                  _Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        _RowHeader(title: 'Probation and Notice Periods'),
-                        SizedBox(height: 12),
-                        _TwoCol(
-                          items: [
-                            {'label': 'Probation Period', 'value': '-'},
-                            {'label': 'Under Period', 'value': '-'},
-                            {'label': 'Probation End Date', 'value': '-'},
-                            {'label': 'Notice Period', 'value': '-'},
-                          ],
-                        ),
+                  _ExpandableCard(
+                    title: 'Probation and Notice Periods',
+                    body: _TwoCol(
+                      items: [
+                        {
+                          'label': 'Probation Period',
+                          'value': employee['probationPeriod'] ?? '-',
+                        },
+                        {
+                          'label': 'Notice Period',
+                          'value': employee['noticePeriod'] ?? '-',
+                        },
+                        {
+                          'label': 'Probation End Date',
+                          'value': employee['probationEndDate'] ?? '-',
+                        },
                       ],
                     ),
                   ),
                   const SizedBox(height: 10),
 
                   // ── Work Tax Address ────────────────────────────────────────
-                  _Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        _RowHeader(title: 'Work Tax Address'),
-                        SizedBox(height: 12),
-                        _Field(
-                          label: 'Work Tax Address',
-                          value: '-',
-                        ),
-                      ],
+                  _ExpandableCard(
+                    title: 'Work Tax Address',
+                    body: _Field(
+                      label: 'Work Tax Address',
+                      value: employee['workTaxAddress'] ?? '-',
                     ),
                   ),
                   const SizedBox(height: 10),
 
                   // ── Expenses Information ───────────────────────────────────
-                  _Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        _RowHeader(title: 'Expenses Information'),
-                        SizedBox(height: 12),
-                        _Field(
-                          label: 'Default Expense Account',
-                          value: '-',
-                        ),
-                        SizedBox(height: 10),
-                        _Field(
-                          label: 'Finance Check Send To Address',
-                          value: '-',
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-
-                  // ── Expense Account ────────────────────────────────────────
-                  _Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        _RowHeader(title: 'Expense Account'),
-                        SizedBox(height: 12),
-                        _TwoCol(
-                          items: [
-                            {'label': 'Default Expense Account', 'value': '-'},
-                            {
-                              'label': 'Finance Check Send To Address',
-                              'value': '-',
-                            },
-                          ],
-                        ),
+                  _ExpandableCard(
+                    title: 'Expenses Information',
+                    body: _TwoCol(
+                      items: [
+                        {
+                          'label': 'Default Expense Account',
+                          'value': employee['defaultExpenseAccount'] ?? '-',
+                        },
+                        {
+                          'label': 'Expense Check Send To Address',
+                          'value': employee['expenseSendAddress'] ?? '-',
+                        },
                       ],
                     ),
                   ),
                   const SizedBox(height: 10),
 
                   // ── Retirement ─────────────────────────────────────────────
-                  _Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        _RowHeader(title: 'Retirement'),
-                        SizedBox(height: 12),
-                        _TwoCol(
-                          items: [
-                            {'label': 'Retirement Age', 'value': '-'},
-                            {'label': 'Retirement Date', 'value': '-'},
-                          ],
-                        ),
+                  _ExpandableCard(
+                    title: 'Retirement',
+                    body: _TwoCol(
+                      items: [
+                        {
+                          'label': 'Retirement Age',
+                          'value': employee['retirementAge'] ?? '-',
+                        },
+                        {
+                          'label': 'Retirement Date',
+                          'value': employee['retirementDate'] ?? '-',
+                        },
                       ],
                     ),
                   ),
                   const SizedBox(height: 10),
 
                   // ── Collective Agreement ───────────────────────────────────
-                  _Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        _RowHeader(title: 'Collective Agreement'),
-                        SizedBox(height: 12),
-                        _TwoCol(
-                          items: [
-                            {'label': 'Union Member', 'value': '-'},
-                            {'label': 'Bargaining Unit', 'value': '-'},
-                            {'label': 'GHID', 'value': '-'},
-                            {'label': 'Collective Agreement', 'value': '-'},
-                          ],
-                        ),
+                  _ExpandableCard(
+                    title: 'Collective Agreement',
+                    body: _TwoCol(
+                      items: [
+                        {
+                          'label': 'Union Member',
+                          'value': employee['unionMember'] ?? '-',
+                        },
+                        {
+                          'label': 'Bargaining Unit',
+                          'value': employee['bargainingUnit'] ?? '-',
+                        },
+                        {'label': 'Union', 'value': employee['union'] ?? '-'},
+                        {
+                          'label': 'Collective Agreement',
+                          'value': employee['collectiveAgreement'] ?? '-',
+                        },
                       ],
                     ),
                   ),
@@ -1056,40 +1359,112 @@ class _Card extends StatelessWidget {
 
 class _RowHeader extends StatelessWidget {
   final String title;
-  const _RowHeader({required this.title});
+  final Widget? titleSuffix;
+  final bool isExpanded;
+  final VoidCallback? onTap;
+  const _RowHeader({
+    required this.title,
+    this.titleSuffix,
+    this.isExpanded = false,
+    this.onTap,
+  });
 
   @override
-  Widget build(BuildContext context) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Expanded(
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF1F2937),
+  Widget build(BuildContext context) => GestureDetector(
+    onTap: onTap,
+    behavior: HitTestBehavior.opaque,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Row(
+            children: [
+              Flexible(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF1F2937),
+                  ),
+                ),
+              ),
+              if (titleSuffix != null) ...[
+                const SizedBox(width: 6),
+                titleSuffix!,
+              ],
+            ],
           ),
         ),
-      ),
-      const Icon(Icons.chevron_right, color: Color(0xFF6B7280)),
-    ],
-  );
-}
-
-class _ExpandRow extends StatelessWidget {
-  final String title;
-  const _ExpandRow({required this.title});
-
-  @override
-  Widget build(BuildContext context) => _Card(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _RowHeader(title: title),
+        AnimatedRotation(
+          turns: isExpanded ? 0.25 : 0.0,
+          duration: const Duration(milliseconds: 200),
+          child: const Icon(Icons.chevron_right, color: Color(0xFF6B7280)),
+        ),
       ],
     ),
   );
+}
+
+/// A card that can expand/collapse its [body] when the header is tapped.
+class _ExpandableCard extends StatefulWidget {
+  final String title;
+  final Widget? titleSuffix;
+  final Widget body;
+  final EdgeInsets? bodyPadding;
+  const _ExpandableCard({
+    required this.title,
+    this.titleSuffix,
+    required this.body,
+    this.bodyPadding,
+  });
+
+  @override
+  State<_ExpandableCard> createState() => _ExpandableCardState();
+}
+
+class _ExpandableCardState extends State<_ExpandableCard> {
+  late bool _expanded;
+
+  @override
+  void initState() {
+    super.initState();
+    _expanded = true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _Card(
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: _RowHeader(
+              title: widget.title,
+              titleSuffix: widget.titleSuffix,
+              isExpanded: _expanded,
+              onTap: () => setState(() => _expanded = !_expanded),
+            ),
+          ),
+          AnimatedCrossFade(
+            firstChild: Padding(
+              padding:
+                  widget.bodyPadding ??
+                  const EdgeInsets.only(left: 14, right: 14, bottom: 14),
+              child: widget.body,
+            ),
+            secondChild: const SizedBox.shrink(),
+            crossFadeState: _expanded
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            duration: const Duration(milliseconds: 220),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _Field extends StatelessWidget {
@@ -1195,10 +1570,7 @@ class _TD extends StatelessWidget {
     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
     child: Text(
       text,
-      style: const TextStyle(
-        fontSize: 12,
-        color: Color(0xFF1F2937),
-      ),
+      style: const TextStyle(fontSize: 12, color: Color(0xFF1F2937)),
     ),
   );
 }

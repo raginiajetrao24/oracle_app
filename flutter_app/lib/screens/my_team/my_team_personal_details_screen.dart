@@ -1036,15 +1036,19 @@ class _MyTeamPersonalDetailsScreenState
             padding: const EdgeInsets.fromLTRB(14, 14, 14, 8),
             child: Row(
               children: [
-                Text(
-                  'Team Members (${rows.length})',
-                  style: const TextStyle(
-                    color: _blue,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    'Team Members (${rows.length})',
+                    style: const TextStyle(
+                      color: _blue,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 8),
                 _buildSortButton(),
                 const SizedBox(width: 8),
                 Container(
@@ -1108,7 +1112,7 @@ class _MyTeamPersonalDetailsScreenState
       ],
       child: Container(
         height: 38,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -1117,16 +1121,17 @@ class _MyTeamPersonalDetailsScreenState
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Sort By ',
-              style: TextStyle(
+            const Icon(Icons.sort_rounded, size: 16, color: _text),
+            const SizedBox(width: 6),
+            Text(
+              _sortBy,
+              style: const TextStyle(
                 color: _text,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(_sortBy, style: const TextStyle(color: _text, fontSize: 12)),
-            const SizedBox(width: 6),
+            const SizedBox(width: 4),
             const Icon(Icons.keyboard_arrow_down_rounded, size: 18),
           ],
         ),

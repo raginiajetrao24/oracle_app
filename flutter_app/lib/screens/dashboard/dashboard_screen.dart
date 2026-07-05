@@ -44,12 +44,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             screen: MyTeamPersonalDetailsScreen(),
           ),
           _DashboardAction(
-            label: 'Person Management',
-            icon: Icons.people_alt_outlined,
-            color: Color(0xFF4DB6AC),
-            screen: PersonSearchScreen(),
-          ),
-          _DashboardAction(
             label: 'Document Records',
             icon: Icons.description_outlined,
             color: Color(0xFF744154),

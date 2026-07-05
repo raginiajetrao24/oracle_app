@@ -738,7 +738,7 @@ class _DragDropZone extends StatefulWidget {
 }
 
 class _DragDropZoneState extends State<_DragDropZone> {
-  bool _hovering = false;
+  final bool _hovering = false;
 
   @override
   Widget build(BuildContext context) {
