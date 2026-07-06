@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/client_groups/person_directory_screen.dart';
+import 'package:flutter_app/screens/me/me_document_records_screen.dart';
 import 'package:flutter_app/screens/person_search/person_search_screen.dart';
 import 'package:flutter_app/screens/core_hr/person_information/person_information_screen.dart';
 import 'package:flutter_app/screens/help_desk_requests/help_desk_requests_screen.dart';
@@ -34,6 +35,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             color: Color(0xFF1F4E8C),
             screen: PersonInformationScreen(),
           ),
+          _DashboardAction(
+            label: 'Document Records',
+            icon: Icons.description_outlined,
+            color: Color(0xFF744154),
+            screen: MeDocumentRecordsScreen(),
+          ),
         ];
       case 1:
         return const [
@@ -67,6 +74,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             icon: Icons.people_outline_rounded,
             color: Color(0xFF00759B),
             screen: PersonDirectoryScreen(),
+          ),
+          _DashboardAction(
+            label: 'Document Records',
+            icon: Icons.description_outlined,
+            color: Color(0xFF744154),
+            screen: DocumentRecordsScreen(sectionTitle: 'My Client Groups'),
           ),
           _DashboardAction(
             label: 'Person Management',
