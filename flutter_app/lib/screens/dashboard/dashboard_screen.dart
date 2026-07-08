@@ -7,6 +7,7 @@ import 'package:flutter_app/screens/my_team/document_records_screen.dart';
 import 'package:flutter_app/screens/my_team/my_team_personal_details_screen.dart';
 import 'package:flutter_app/screens/notifications/notifications_screen.dart';
 import 'package:flutter_app/screens/organization_trees/organization_trees_screen.dart';
+import 'package:flutter_app/screens/org_chart/org_chart_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -22,6 +23,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     'My Team',
     'My Client Groups',
     'Help Desk',
+    'Others',
   ];
 
   List<_DashboardAction> get _currentActions {
@@ -99,6 +101,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
             icon: Icons.support_agent_rounded,
             color: Color(0xFF0F4C81),
             screen: HelpDeskRequestsScreen(),
+          ),
+        ];
+      case 4:
+        return const [
+          _DashboardAction(
+            label: 'Resource Directory',
+            icon: Icons.account_tree_rounded,
+            color: Color(0xFF1F4E8C),
+            screen: OrgChartScreen(),
           ),
         ];
       default:
