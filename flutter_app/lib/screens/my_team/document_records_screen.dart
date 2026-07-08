@@ -1175,8 +1175,13 @@ class _DocumentRecordsScreenState extends State<DocumentRecordsScreen> {
 
 class PersonDocumentRecordsScreen extends StatefulWidget {
   final DocumentPerson person;
+  final bool isMeSection;
 
-  const PersonDocumentRecordsScreen({super.key, required this.person});
+  const PersonDocumentRecordsScreen({
+    super.key,
+    required this.person,
+    this.isMeSection = false,
+  });
 
   @override
   State<PersonDocumentRecordsScreen> createState() =>
@@ -1324,8 +1329,6 @@ class _PersonDocumentRecordsScreenState
     'FORM16_PARTB',
     'FORM16_REPORT',
     'Gender Recognition Certificate',
-    'Gender Recognition Certificate',
-    'Government Issued',
     'Government Issued',
     'Grandchild affidavit',
     'Health Insurance',
@@ -1532,6 +1535,7 @@ class _PersonDocumentRecordsScreenState
             subtitle: '${widget.person.name}, ${widget.person.businessTitle}',
             initials: widget.person.initials,
             onBack: () => Navigator.maybePop(context),
+            isMeSection: widget.isMeSection,
             child: Column(
               children: [
                 _SearchBox(
@@ -1539,8 +1543,9 @@ class _PersonDocumentRecordsScreenState
                   hint: 'Search by type, name, or number',
                   trailingIcon: Icons.search_rounded,
                   onChanged: (_) => setState(() {}),
+                  rounded: widget.isMeSection,
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: widget.isMeSection ? 18 : 10),
                 _buildFilterBar(),
               ],
             ),
@@ -1884,6 +1889,8 @@ class _PersonDocumentRecordsScreenState
         ? _selectedTypes.first
         : '${_selectedTypes.length} selected';
 
+    final brightBg = widget.isMeSection;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1903,6 +1910,7 @@ class _PersonDocumentRecordsScreenState
                     label: 'Category',
                     value: catLabel,
                     selected: _selectedCategories.isNotEmpty,
+                    isBrightBackground: brightBg,
                   ),
                 ),
                 PopupMenuButton<String>(
@@ -1939,6 +1947,7 @@ class _PersonDocumentRecordsScreenState
                     label: 'Excluded',
                     value: excLabel,
                     selected: _selectedExcluded.isNotEmpty,
+                    isBrightBackground: brightBg,
                   ),
                 ),
                 GestureDetector(
@@ -1947,6 +1956,7 @@ class _PersonDocumentRecordsScreenState
                     label: 'Last Updated',
                     value: luLabel,
                     selected: luLabel.isNotEmpty,
+                    isBrightBackground: brightBg,
                   ),
                 ),
                 GestureDetector(
@@ -1959,6 +1969,7 @@ class _PersonDocumentRecordsScreenState
                     label: 'Type',
                     value: typeLabel,
                     selected: _selectedTypes.isNotEmpty,
+                    isBrightBackground: brightBg,
                   ),
                 ),
                 GestureDetector(
@@ -1967,11 +1978,13 @@ class _PersonDocumentRecordsScreenState
                     label: 'Unpublished',
                     value: _unpublished ? 'Yes' : '',
                     selected: _unpublished,
+                    isBrightBackground: brightBg,
                   ),
                 ),
                 _PlainFilterButton(
                   label: 'Filters',
                   onTap: _showDocumentFilters,
+                  isBrightBackground: brightBg,
                 ),
                 TextButton(
                   onPressed: _activeFilterCount == 0 ? null : _clearFilters,
@@ -1985,7 +1998,7 @@ class _PersonDocumentRecordsScreenState
           tooltip: 'Bookmark',
           onPressed: () => setState(() => _bookmarked = !_bookmarked),
           icon: Icon(_bookmarked ? Icons.bookmark : Icons.bookmark_border),
-          color: Colors.white,
+          color: brightBg ? const Color(0xFF174A97) : Colors.white,
         ),
       ],
     );
@@ -2472,6 +2485,7 @@ class _WebLikeHeader extends StatelessWidget {
   final String? initials;
   final VoidCallback? onBack;
   final Widget child;
+  final bool isMeSection;
 
   const _WebLikeHeader({
     required this.title,
@@ -2479,67 +2493,180 @@ class _WebLikeHeader extends StatelessWidget {
     this.initials,
     this.onBack,
     required this.child,
+    this.isMeSection = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final bgColor = isMeSection ? const Color(0xFFDCEEFF) : const Color(0xFFC9DFF6);
+    final primaryColor = isMeSection ? const Color(0xFF174A97) : const Color(0xFF1F4E8C);
+    final topPad = isMeSection
+        ? MediaQuery.of(context).padding.top
+        : MediaQuery.of(context).padding.top + 16;
+    final afterLogo = isMeSection ? 20.0 : 12.0;
+    final avatarRadius = isMeSection ? 28.0 : 18.0;
+    final bottomPad = isMeSection ? 28.0 : 16.0;
+    final cornerRadius = isMeSection ? 46.0 : 32.0;
+
     return Container(
-      color: const Color(0xFF4B252C),
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(cornerRadius),
+          bottomRight: Radius.circular(cornerRadius),
+        ),
+      ),
+      padding: EdgeInsets.only(
+        top: topPad,
+        bottom: bottomPad,
+        left: 16,
+        right: 16,
+      ),
       child: SafeArea(
         bottom: false,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Logo centered at top
+            Center(
+              child: Image.asset(
+                'assets/images/mannai_logo.jpeg',
+                height: 48,
+                fit: BoxFit.contain,
+                color: bgColor,
+                colorBlendMode: BlendMode.multiply,
+              ),
+            ),
+            SizedBox(height: afterLogo),
+            // Back button (top-left, positioned absolutely via row spacer)
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (onBack != null)
-                  IconButton(
-                    tooltip: 'Back',
-                    onPressed: onBack,
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                    color: Colors.white,
+                  Padding(
+                    padding: isMeSection ? EdgeInsets.zero : EdgeInsets.zero,
+                    child: Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: primaryColor.withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        tooltip: 'Back',
+                        padding: EdgeInsets.zero,
+                        onPressed: onBack,
+                        icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                        color: primaryColor,
+                        iconSize: 16,
+                      ),
+                    ),
                   ),
-                if (initials != null) ...[
+                if (initials != null && isMeSection) ...[
+                  const SizedBox(width: 12),
                   CircleAvatar(
-                    radius: 18,
+                    radius: avatarRadius,
                     backgroundColor: Colors.white,
                     child: Text(
                       initials!,
-                      style: const TextStyle(
-                        color: Color(0xFF4B252C),
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: isMeSection ? 24 : 16,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          subtitle,
+                          style: const TextStyle(
+                            color: Color(0xFF6B7280),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ] else if (initials != null) ...[
+                  CircleAvatar(
+                    radius: avatarRadius,
+                    backgroundColor: Colors.white,
+                    child: Text(
+                      initials!,
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 16,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
                   ),
                   const SizedBox(width: 10),
-                ],
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 21,
-                          fontWeight: FontWeight.w900,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontSize: 21,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        subtitle,
-                        style: const TextStyle(
-                          color: Color(0xFFE5E7EB),
-                          fontSize: 13,
+                        const SizedBox(height: 2),
+                        Text(
+                          subtitle,
+                          style: const TextStyle(
+                            color: Color(0xFF7B8B9B),
+                            fontSize: 13,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                ] else
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontSize: 21,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          subtitle,
+                          style: const TextStyle(
+                            color: Color(0xFF7B8B9B),
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: isMeSection ? 30 : 14),
             child,
           ],
         ),
@@ -2553,16 +2680,45 @@ class _SearchBox extends StatelessWidget {
   final String hint;
   final IconData trailingIcon;
   final ValueChanged<String> onChanged;
+  final bool rounded;
 
   const _SearchBox({
     required this.controller,
     required this.hint,
     this.trailingIcon = Icons.search_rounded,
     required this.onChanged,
+    this.rounded = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (rounded) {
+      return TextField(
+        controller: controller,
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF9CA3AF)),
+          prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF9CA3AF)),
+          suffixIcon: Icon(trailingIcon, color: const Color(0xFF9CA3AF)),
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: Color(0xFF174A97), width: 1.5),
+          ),
+        ),
+      );
+    }
     return TextField(
       controller: controller,
       onChanged: onChanged,
@@ -2586,23 +2742,32 @@ class _FilterPill extends StatelessWidget {
   final String label;
   final String value;
   final bool selected;
+  final bool isBrightBackground;
 
   const _FilterPill({
     required this.label,
     this.value = '',
     this.selected = false,
+    this.isBrightBackground = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final foreground = selected ? Colors.white : const Color(0xFFE5E7EB);
+    final foreground = selected
+        ? Colors.white
+        : isBrightBackground
+            ? const Color(0xFF174A97)
+            : const Color(0xFFE5E7EB);
+    final borderColor = isBrightBackground
+        ? const Color(0xFF174A97).withValues(alpha: 0.3)
+        : const Color(0xFF7A5960);
     return Container(
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
       decoration: BoxDecoration(
         color: selected ? const Color(0xFF1F4E8C) : Colors.transparent,
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: const Color(0xFF7A5960)),
+        border: Border.all(color: borderColor),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -2633,11 +2798,19 @@ class _FilterPill extends StatelessWidget {
 class _PlainFilterButton extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
+  final bool isBrightBackground;
 
-  const _PlainFilterButton({required this.label, required this.onTap});
+  const _PlainFilterButton({
+    required this.label,
+    required this.onTap,
+    this.isBrightBackground = false,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final borderColor = isBrightBackground
+        ? const Color(0xFF174A97).withValues(alpha: 0.3)
+        : const Color(0xFF7A5960);
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: OutlinedButton.icon(
@@ -2645,8 +2818,10 @@ class _PlainFilterButton extends StatelessWidget {
         icon: const Icon(Icons.tune_rounded),
         label: Text(label),
         style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.white,
-          side: const BorderSide(color: Color(0xFF7A5960)),
+          foregroundColor: isBrightBackground
+              ? const Color(0xFF174A97)
+              : Colors.white,
+          side: BorderSide(color: borderColor),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         ),
       ),

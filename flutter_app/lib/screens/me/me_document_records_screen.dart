@@ -19,6 +19,9 @@ class MeDocumentRecordsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PersonDocumentRecordsScreen(person: _curtisFeitty);
+    return const PersonDocumentRecordsScreen(
+      person: _curtisFeitty,
+      isMeSection: true,
+    );
   }
 }
