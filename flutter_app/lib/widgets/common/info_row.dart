@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants/app_colors.dart';
+import 'package:flutter_app/app/constants/app_colors.dart';
 
 class InfoRow extends StatelessWidget {
   final String label;

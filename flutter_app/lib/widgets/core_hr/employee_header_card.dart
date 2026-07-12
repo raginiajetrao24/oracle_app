@@ -16,12 +16,20 @@ class _EmployeeHeaderCardState extends State<EmployeeHeaderCard> {
   XFile? _imageFile;
 
   Future<void> _pickImage(ImageSource source) async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? picked = await picker.pickImage(source: source);
-    if (picked != null) {
-      setState(() {
-        _imageFile = picked;
-      });
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? picked = await picker.pickImage(source: source);
+      if (picked != null) {
+        setState(() {
+          _imageFile = picked;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to pick image: $e')),
+        );
+      }
     }
   }
 

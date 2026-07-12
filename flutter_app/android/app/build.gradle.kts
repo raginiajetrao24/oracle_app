@@ -23,6 +23,16 @@ android {
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        ndk {
+            abiFilters.clear()
+            abiFilters.addAll(setOf("arm64-v8a"))
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            version = "3.22.1"
+        }
     }
 
     buildTypes {

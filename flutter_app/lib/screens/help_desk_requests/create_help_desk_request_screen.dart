@@ -22,35 +22,66 @@ class _AttachedFile {
     return '${(bytes / (1024 * 1024)).toStringAsFixed(1)}MB';
   }
 
-  String get extension => name.contains('.') ? name.split('.').last.toUpperCase() : 'FILE';
+  String get extension =>
+      name.contains('.') ? name.split('.').last.toUpperCase() : 'FILE';
 }
 
 // ─── Options ──────────────────────────────────────────────────────────────────
 
 const List<String> _channelTypeOptions = [
-  'Chat', 'Web Conference', 'Digital Audio and Video', 'E-Mail',
-  'IoT', 'LinkedIn', 'Microsoft Teams', 'None', 'Phone',
-  'SMS', 'Slack', 'Social', 'Web', 'Cobrowse',
+  'Chat',
+  'Web Conference',
+  'Digital Audio and Video',
+  'E-Mail',
+  'IoT',
+  'LinkedIn',
+  'Microsoft Teams',
+  'None',
+  'Phone',
+  'SMS',
+  'Slack',
+  'Social',
+  'Web',
+  'Cobrowse',
 ];
 const List<String> _queueOptions = [
-  'Benefits Queue', 'Canada - HR Default', 'Default',
-  'Disciplinary Actions', 'Escalation HR ODA Queue',
-  'Germany - HR Auto Assign', 'Grievances', 'HR Administration',
-  'HR UK Queue', 'Health and Safety Queue', 'Initial HR ODA Queue',
-  'Labor Relations', 'LiveChat', 'Payroll Queue',
+  'Benefits Queue',
+  'Canada - HR Default',
+  'Default',
+  'Disciplinary Actions',
+  'Escalation HR ODA Queue',
+  'Germany - HR Auto Assign',
+  'Grievances',
+  'HR Administration',
+  'HR UK Queue',
+  'Health and Safety Queue',
+  'Initial HR ODA Queue',
+  'Labor Relations',
+  'LiveChat',
+  'Payroll Queue',
 ];
 const List<String> _severityOptions = ['High', 'Medium', 'Low'];
 const List<String> _attachmentCategoryOptions = [
-  'Inline Attachments', 'Internal', 'Miscellaneous',
+  'Inline Attachments',
+  'Internal',
+  'Miscellaneous',
 ];
 const List<String> _contactOptions = [
-  'Curtis Feitty', 'Janice AgentHRHD', 'John Dunbar',
+  'Curtis Feitty',
+  'Janice AgentHRHD',
+  'John Dunbar',
 ];
 const List<String> _categoryOptions = [
-  'Benefits', 'Payroll', 'Workplace Relations', 'HR Administration',
+  'Benefits',
+  'Payroll',
+  'Workplace Relations',
+  'HR Administration',
 ];
 const List<String> _productGroupOptions = [
-  'Human Resources', 'Payroll', 'Benefits', 'Employee Relations',
+  'Human Resources',
+  'Payroll',
+  'Benefits',
+  'Employee Relations',
 ];
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
@@ -128,11 +159,7 @@ class _CreateHelpDeskRequestScreenState
 
       final newFiles = result.files
           .where((f) => f.path != null && f.name.isNotEmpty)
-          .map((f) => _AttachedFile(
-                name: f.name,
-                path: f.path!,
-                bytes: f.size,
-              ))
+          .map((f) => _AttachedFile(name: f.name, path: f.path!, bytes: f.size))
           .toList();
 
       // Avoid duplicates by name
@@ -172,18 +199,22 @@ class _CreateHelpDeskRequestScreenState
 
   void _save() {
     if (_subjectController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Subject is required'),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Color(0xFFDC2626),
-      ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Subject is required'),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Color(0xFFDC2626),
+        ),
+      );
       return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Request saved successfully'),
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Color(0xFF16A34A),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Request saved successfully'),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Color(0xFF16A34A),
+      ),
+    );
     Navigator.maybePop(context);
   }
 
@@ -199,13 +230,17 @@ class _CreateHelpDeskRequestScreenState
           icon: const Icon(Icons.chevron_left_rounded, size: 28),
           onPressed: () => Navigator.maybePop(context),
         ),
-        title: const Text('New Help Desk Request',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+        title: const Text(
+          'New Help Desk Request',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.maybePop(context),
-            child: const Text('Cancel',
-                style: TextStyle(color: Colors.white70, fontSize: 14)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white70, fontSize: 14),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 12, left: 4),
@@ -216,320 +251,393 @@ class _CreateHelpDeskRequestScreenState
                 foregroundColor: AppColors.primary,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 8,
+                ),
               ),
-              child: const Text('Save',
-                  style:
-                      TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+              child: const Text(
+                'Save',
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+              ),
             ),
           ),
         ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
-          // ── Subject ──────────────────────────────────────────────────
-          _Card(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const _FieldLabel(label: 'Subject', isRequired: true),
-              const SizedBox(height: 6),
-              _textField(controller: _subjectController, hint: 'Enter subject'),
-              const SizedBox(height: 4),
-              const Align(
-                alignment: Alignment.centerRight,
-                child: Text('Required',
-                    style: TextStyle(
-                        fontSize: 11, color: AppColors.textSecondary)),
-              ),
-            ]),
-          ),
-          const SizedBox(height: 10),
-
-          // ── Basic Information ─────────────────────────────────────────
-          _Card(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              _sectionTitle('Basic Information'),
-              const SizedBox(height: 16),
-
-              const _FieldLabel(label: 'Primary Point of Contact'),
-              const SizedBox(height: 6),
-              Row(children: [
-                Expanded(
-                  child: _ComboField(
-                    controller: _primaryContactController,
-                    hint: 'Select or type contact name',
-                    options: _contactOptions,
-                    onSelected: (v) => setState(() {
-                      _primaryContactController.text = v;
-                    }),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                _LookupBtn(onTap: () {}),
-              ]),
-              const SizedBox(height: 14),
-
-              const _FieldLabel(label: 'Assigned To'),
-              const SizedBox(height: 6),
-              _ComboField(
-                controller: _assignedToController,
-                hint: 'Select or type name',
-                options: _contactOptions,
-                onSelected: (v) =>
-                    setState(() => _assignedToController.text = v),
-              ),
-              const SizedBox(height: 14),
-
-              const _FieldLabel(label: 'Queue'),
-              const SizedBox(height: 6),
-              _ComboField(
-                controller: _queueController,
-                hint: 'Select queue',
-                options: _queueOptions,
-                onSelected: (v) => setState(() {
-                  _queue = v;
-                  _queueController.text = v;
-                }),
-              ),
-              const SizedBox(height: 14),
-
-              const _FieldLabel(label: 'Category'),
-              const SizedBox(height: 6),
-              _ComboField(
-                controller: _categoryController,
-                hint: 'Select category',
-                options: _categoryOptions,
-                onSelected: (v) =>
-                    setState(() => _categoryController.text = v),
-              ),
-              const SizedBox(height: 14),
-
-              const _FieldLabel(label: 'Product Group'),
-              const SizedBox(height: 6),
-              _ComboField(
-                controller: _productGroupController,
-                hint: 'Select product group',
-                options: _productGroupOptions,
-                onSelected: (v) =>
-                    setState(() => _productGroupController.text = v),
-              ),
-              const SizedBox(height: 14),
-
-              const _FieldLabel(label: 'Channel Type'),
-              const SizedBox(height: 6),
-              _ComboField(
-                controller: _channelTypeController,
-                hint: 'Select channel type',
-                options: _channelTypeOptions,
-                onSelected: (v) =>
-                    setState(() => _channelTypeController.text = v),
-              ),
-              const SizedBox(height: 14),
-
-              const _FieldLabel(label: 'Severity'),
-              const SizedBox(height: 6),
-              _dropdownField(
-                value: _severity,
-                items: _severityOptions,
-                onChanged: (v) =>
-                    setState(() => _severity = v ?? _severity),
-              ),
-              const SizedBox(height: 14),
-
-              _CriticalToggle(
-                value: _critical,
-                onChanged: (v) => setState(() => _critical = v),
-              ),
-            ]),
-          ),
-          const SizedBox(height: 10),
-
-          // ── Description ───────────────────────────────────────────────
-          _Card(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              _sectionTitle('Description'),
-              const SizedBox(height: 16),
-              const _FieldLabel(label: 'Detailed Description'),
-              const SizedBox(height: 6),
-              TextField(
-                controller: _descriptionController,
-                maxLines: 8,
-                maxLength: 1000,
-                style: const TextStyle(
-                    fontSize: 14, color: AppColors.textPrimary),
-                decoration: InputDecoration(
-                  hintText: 'Type # to bring up a list of SmartText.',
-                  hintStyle: const TextStyle(
-                      fontSize: 13, color: AppColors.textSecondary),
-                  filled: true,
-                  fillColor: Colors.white,
-                  counterText: '',
-                  contentPadding: const EdgeInsets.all(12),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(color: AppColors.border)),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(color: AppColors.border)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                          color: AppColors.primary, width: 1.5)),
-                ),
-              ),
-              const SizedBox(height: 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Subject ──────────────────────────────────────────────────
+            _Card(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Type # to bring up a list of SmartText.',
+                  const _FieldLabel(label: 'Subject', isRequired: true),
+                  const SizedBox(height: 6),
+                  _textField(
+                    controller: _subjectController,
+                    hint: 'Enter subject',
+                  ),
+                  const SizedBox(height: 4),
+                  const Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'Required',
                       style: TextStyle(
-                          fontSize: 11, color: AppColors.textSecondary)),
-                  Text('${1000 - _descLength} characters remaining',
-                      style: const TextStyle(
-                          fontSize: 11, color: AppColors.primary)),
+                        fontSize: 11,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ]),
-          ),
-          const SizedBox(height: 10),
+            ),
+            const SizedBox(height: 10),
 
-          // ── Attachments ───────────────────────────────────────────────
-          _Card(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              _sectionTitle('Attachments'),
-              const SizedBox(height: 16),
+            // ── Basic Information ─────────────────────────────────────────
+            _Card(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _sectionTitle('Basic Information'),
+                  const SizedBox(height: 16),
 
-              const _FieldLabel(label: 'Category'),
-              const SizedBox(height: 6),
-              _dropdownField(
-                value: _attachmentCategory,
-                items: _attachmentCategoryOptions,
-                onChanged: (v) => setState(
-                    () => _attachmentCategory = v ?? _attachmentCategory),
+                  const _FieldLabel(label: 'Primary Point of Contact'),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _ComboField(
+                          controller: _primaryContactController,
+                          hint: 'Select or type contact name',
+                          options: _contactOptions,
+                          onSelected: (v) => setState(() {
+                            _primaryContactController.text = v;
+                          }),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      _LookupBtn(onTap: () {}),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+
+                  const _FieldLabel(label: 'Assigned To'),
+                  const SizedBox(height: 6),
+                  _ComboField(
+                    controller: _assignedToController,
+                    hint: 'Select or type name',
+                    options: _contactOptions,
+                    onSelected: (v) =>
+                        setState(() => _assignedToController.text = v),
+                  ),
+                  const SizedBox(height: 14),
+
+                  const _FieldLabel(label: 'Queue'),
+                  const SizedBox(height: 6),
+                  _ComboField(
+                    controller: _queueController,
+                    hint: 'Select queue',
+                    options: _queueOptions,
+                    onSelected: (v) => setState(() {
+                      _queue = v;
+                      _queueController.text = v;
+                    }),
+                  ),
+                  const SizedBox(height: 14),
+
+                  const _FieldLabel(label: 'Category'),
+                  const SizedBox(height: 6),
+                  _ComboField(
+                    controller: _categoryController,
+                    hint: 'Select category',
+                    options: _categoryOptions,
+                    onSelected: (v) =>
+                        setState(() => _categoryController.text = v),
+                  ),
+                  const SizedBox(height: 14),
+
+                  const _FieldLabel(label: 'Product Group'),
+                  const SizedBox(height: 6),
+                  _ComboField(
+                    controller: _productGroupController,
+                    hint: 'Select product group',
+                    options: _productGroupOptions,
+                    onSelected: (v) =>
+                        setState(() => _productGroupController.text = v),
+                  ),
+                  const SizedBox(height: 14),
+
+                  const _FieldLabel(label: 'Channel Type'),
+                  const SizedBox(height: 6),
+                  _ComboField(
+                    controller: _channelTypeController,
+                    hint: 'Select channel type',
+                    options: _channelTypeOptions,
+                    onSelected: (v) =>
+                        setState(() => _channelTypeController.text = v),
+                  ),
+                  const SizedBox(height: 14),
+
+                  const _FieldLabel(label: 'Severity'),
+                  const SizedBox(height: 6),
+                  _dropdownField(
+                    value: _severity,
+                    items: _severityOptions,
+                    onChanged: (v) =>
+                        setState(() => _severity = v ?? _severity),
+                  ),
+                  const SizedBox(height: 14),
+
+                  _CriticalToggle(
+                    value: _critical,
+                    onChanged: (v) => setState(() => _critical = v),
+                  ),
+                ],
               ),
-              const SizedBox(height: 14),
+            ),
+            const SizedBox(height: 10),
 
-              // ── Drag & Drop zone ──────────────────────────────────────
-              _DragDropZone(
-                isLoading: _isPickingFile,
-                onTap: _pickFiles,
+            // ── Description ───────────────────────────────────────────────
+            _Card(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _sectionTitle('Description'),
+                  const SizedBox(height: 16),
+                  const _FieldLabel(label: 'Detailed Description'),
+                  const SizedBox(height: 6),
+                  TextField(
+                    controller: _descriptionController,
+                    maxLines: 8,
+                    maxLength: 1000,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: AppColors.textPrimary,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'Type # to bring up a list of SmartText.',
+                      hintStyle: const TextStyle(
+                        fontSize: 13,
+                        color: AppColors.textSecondary,
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      counterText: '',
+                      contentPadding: const EdgeInsets.all(12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: AppColors.border),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: AppColors.border),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: AppColors.primary,
+                          width: 1.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Type # to bring up a list of SmartText.',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      Text(
+                        '${1000 - _descLength} characters remaining',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              const SizedBox(height: 12),
+            ),
+            const SizedBox(height: 10),
 
-              // ── Attached files list ───────────────────────────────────
-              if (_attachedFiles.isNotEmpty) ...[
-                const _FieldLabel(label: 'Attached Files'),
-                const SizedBox(height: 8),
-                ..._attachedFiles.asMap().entries.map(
+            // ── Attachments ───────────────────────────────────────────────
+            _Card(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _sectionTitle('Attachments'),
+                  const SizedBox(height: 16),
+
+                  const _FieldLabel(label: 'Category'),
+                  const SizedBox(height: 6),
+                  _dropdownField(
+                    value: _attachmentCategory,
+                    items: _attachmentCategoryOptions,
+                    onChanged: (v) => setState(
+                      () => _attachmentCategory = v ?? _attachmentCategory,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+
+                  // ── Drag & Drop zone ──────────────────────────────────────
+                  _DragDropZone(isLoading: _isPickingFile, onTap: _pickFiles),
+                  const SizedBox(height: 12),
+
+                  // ── Attached files list ───────────────────────────────────
+                  if (_attachedFiles.isNotEmpty) ...[
+                    const _FieldLabel(label: 'Attached Files'),
+                    const SizedBox(height: 8),
+                    ..._attachedFiles.asMap().entries.map(
                       (e) => _FileRow(
                         file: e.value,
                         onRemove: () => _removeFile(e.key),
                       ),
                     ),
-                const SizedBox(height: 10),
-              ],
+                    const SizedBox(height: 10),
+                  ],
 
-              // ── URL row ───────────────────────────────────────────────
-              const _FieldLabel(label: 'URL'),
-              const SizedBox(height: 6),
-              Row(children: [
+                  // ── URL row ───────────────────────────────────────────────
+                  const _FieldLabel(label: 'URL'),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _textField(
+                          controller: _urlController,
+                          hint: 'Paste a URL...',
+                          onSubmitted: (_) => _addUrl(),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      SizedBox(
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: _addUrl,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 18),
+                          ),
+                          child: const Text(
+                            'Add URL',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Attached URLs
+                  if (_attachedUrls.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    ..._attachedUrls.asMap().entries.map(
+                      (e) => Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.link_rounded,
+                              size: 16,
+                              color: AppColors.primary,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                e.value,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: AppColors.primary,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () =>
+                                  setState(() => _attachedUrls.removeAt(e.key)),
+                              child: const Icon(
+                                Icons.close_rounded,
+                                size: 16,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // ── Bottom buttons ────────────────────────────────────────────
+            Row(
+              children: [
                 Expanded(
-                  child: _textField(
-                    controller: _urlController,
-                    hint: 'Paste a URL...',
-                    onSubmitted: (_) => _addUrl(),
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.maybePop(context),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.primary,
+                      side: const BorderSide(color: AppColors.border),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(width: 10),
-                SizedBox(
-                  height: 48,
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 2,
                   child: ElevatedButton(
-                    onPressed: _addUrl,
+                    onPressed: _save,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 18),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    child: const Text('Add URL',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w600)),
+                    child: const Text(
+                      'Save Request',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
-              ]),
-
-              // Attached URLs
-              if (_attachedUrls.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                ..._attachedUrls.asMap().entries.map((e) => Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: Row(children: [
-                        const Icon(Icons.link_rounded,
-                            size: 16, color: AppColors.primary),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(e.value,
-                              style: const TextStyle(
-                                  fontSize: 13, color: AppColors.primary),
-                              overflow: TextOverflow.ellipsis),
-                        ),
-                        GestureDetector(
-                          onTap: () => setState(
-                              () => _attachedUrls.removeAt(e.key)),
-                          child: const Icon(Icons.close_rounded,
-                              size: 16,
-                              color: AppColors.textSecondary),
-                        ),
-                      ]),
-                    )),
               ],
-            ]),
-          ),
-          const SizedBox(height: 20),
-
-          // ── Bottom buttons ────────────────────────────────────────────
-          Row(children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () => Navigator.maybePop(context),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.primary,
-                  side: const BorderSide(color: AppColors.border),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-                child: const Text('Cancel',
-                    style: TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w500)),
-              ),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              flex: 2,
-              child: ElevatedButton(
-                onPressed: _save,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-                child: const Text('Save Request',
-                    style: TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w600)),
-              ),
-            ),
-          ]),
-        ]),
+          ],
+        ),
       ),
     );
   }
@@ -540,81 +648,91 @@ class _CreateHelpDeskRequestScreenState
     required TextEditingController controller,
     String? hint,
     void Function(String)? onSubmitted,
-  }) =>
-      TextField(
-        controller: controller,
-        onSubmitted: onSubmitted,
-        style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: const TextStyle(
-              fontSize: 13, color: AppColors.textSecondary),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppColors.border)),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppColors.border)),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide:
-                  const BorderSide(color: AppColors.primary, width: 1.5)),
-        ),
-      );
+  }) => TextField(
+    controller: controller,
+    onSubmitted: onSubmitted,
+    style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
+    decoration: InputDecoration(
+      hintText: hint,
+      hintStyle: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: const BorderSide(color: AppColors.border),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: const BorderSide(color: AppColors.border),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+      ),
+    ),
+  );
 
   Widget _dropdownField({
     required String value,
     required List<String> items,
     required ValueChanged<String?> onChanged,
-  }) =>
-      Container(
-        height: 48,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppColors.border),
+  }) => Container(
+    height: 48,
+    padding: const EdgeInsets.symmetric(horizontal: 12),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: AppColors.border),
+    ),
+    child: DropdownButtonHideUnderline(
+      child: DropdownButton<String>(
+        value: value,
+        isExpanded: true,
+        style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
+        icon: const Icon(
+          Icons.keyboard_arrow_down_rounded,
+          size: 20,
+          color: AppColors.textSecondary,
         ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton<String>(
-            value: value,
-            isExpanded: true,
-            style: const TextStyle(
-                fontSize: 14, color: AppColors.textPrimary),
-            icon: const Icon(Icons.keyboard_arrow_down_rounded,
-                size: 20, color: AppColors.textSecondary),
-            items: items
-                .map((i) => DropdownMenuItem(
-                    value: i,
-                    child: Text(i,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 14))))
-                .toList(),
-            onChanged: onChanged,
-          ),
-        ),
-      );
+        items: items
+            .map(
+              (i) => DropdownMenuItem(
+                value: i,
+                child: Text(
+                  i,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+            )
+            .toList(),
+        onChanged: onChanged,
+      ),
+    ),
+  );
 
-  Widget _sectionTitle(String text) => Row(children: [
-        Container(
-          width: 4,
-          height: 20,
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(2),
-          ),
+  Widget _sectionTitle(String text) => Row(
+    children: [
+      Container(
+        width: 4,
+        height: 20,
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: BorderRadius.circular(2),
         ),
-        const SizedBox(width: 10),
-        Text(text,
-            style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary)),
-      ]);
+      ),
+      const SizedBox(width: 10),
+      Text(
+        text,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+          color: AppColors.textPrimary,
+        ),
+      ),
+    ],
+  );
 }
 
 // ─── Drag & Drop Zone ─────────────────────────────────────────────────────────
@@ -636,10 +754,7 @@ class _DragDropZone extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFFFAFBFC),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: AppColors.border,
-            width: 1,
-          ),
+          border: Border.all(color: AppColors.border, width: 1),
         ),
         child: isLoading
             ? const Row(
@@ -649,60 +764,79 @@ class _DragDropZone extends StatelessWidget {
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
-                        strokeWidth: 2, color: AppColors.primary),
+                      strokeWidth: 2,
+                      color: AppColors.primary,
+                    ),
                   ),
                   SizedBox(width: 12),
-                  Text('Opening file picker...',
-                      style: TextStyle(
-                          fontSize: 13, color: AppColors.textSecondary)),
+                  Text(
+                    'Opening file picker...',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
                 ],
               )
-            : Row(children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEEF5FC),
-                    borderRadius: BorderRadius.circular(10),
+            : Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEEF5FC),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.cloud_upload_outlined,
+                      color: AppColors.primary,
+                      size: 24,
+                    ),
                   ),
-                  child: const Icon(Icons.cloud_upload_outlined,
-                      color: AppColors.primary, size: 24),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Drag and Drop',
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Drag and Drop',
                           style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary)),
-                      const SizedBox(height: 2),
-                      RichText(
-                        text: const TextSpan(
-                          text: 'Select',
-                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        RichText(
+                          text: const TextSpan(
+                            text: 'Select',
+                            style: TextStyle(
                               fontSize: 13,
                               color: AppColors.primary,
                               fontWeight: FontWeight.w600,
-                              decoration: TextDecoration.underline),
-                          children: [
-                            TextSpan(
-                              text: ' or drop files here.',
-                              style: TextStyle(
+                              decoration: TextDecoration.underline,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: ' or drop files here.',
+                                style: TextStyle(
                                   color: AppColors.textSecondary,
                                   fontWeight: FontWeight.w400,
-                                  decoration: TextDecoration.none),
-                            ),
-                          ],
+                                  decoration: TextDecoration.none,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                const Icon(Icons.chevron_right_rounded,
-                    color: AppColors.textSecondary, size: 20),
-              ]),
+                  const Icon(
+                    Icons.chevron_right_rounded,
+                    color: AppColors.textSecondary,
+                    size: 20,
+                  ),
+                ],
+              ),
       ),
     );
   }
@@ -718,15 +852,20 @@ class _FileRow extends StatelessWidget {
 
   Color get _extColor {
     switch (file.extension.toLowerCase()) {
-      case 'PDF': return const Color(0xFFDC2626);
+      case 'PDF':
+        return const Color(0xFFDC2626);
       case 'DOC':
-      case 'DOCX': return const Color(0xFF2563EB);
+      case 'DOCX':
+        return const Color(0xFF2563EB);
       case 'XLS':
-      case 'XLSX': return const Color(0xFF16A34A);
+      case 'XLSX':
+        return const Color(0xFF16A34A);
       case 'PNG':
       case 'JPG':
-      case 'JPEG': return const Color(0xFF9333EA);
-      default: return AppColors.primary;
+      case 'JPEG':
+        return const Color(0xFF9333EA);
+      default:
+        return AppColors.primary;
     }
   }
 
@@ -741,67 +880,79 @@ class _FileRow extends StatelessWidget {
         border: Border.all(color: AppColors.border),
         boxShadow: const [
           BoxShadow(
-              color: Color(0x05000000), blurRadius: 4, offset: Offset(0, 1)),
+            color: Color(0x05000000),
+            blurRadius: 4,
+            offset: Offset(0, 1),
+          ),
         ],
       ),
-      child: Row(children: [
-        // File type badge
-        Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: _extColor.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            file.extension.length > 4
-                ? file.extension.substring(0, 4)
-                : file.extension,
-            style: TextStyle(
+      child: Row(
+        children: [
+          // File type badge
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: _extColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              file.extension.length > 4
+                  ? file.extension.substring(0, 4)
+                  : file.extension,
+              style: TextStyle(
                 fontSize: 9,
                 fontWeight: FontWeight.w800,
-                color: _extColor),
+                color: _extColor,
+              ),
+            ),
           ),
-        ),
-        const SizedBox(width: 12),
-        // File info
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                file.name,
-                style: const TextStyle(
+          const SizedBox(width: 12),
+          // File info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  file.name,
+                  style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 2),
-              Text(
-                file.sizeLabel,
-                style: const TextStyle(
-                    fontSize: 11, color: AppColors.textSecondary),
-              ),
-            ],
-          ),
-        ),
-        // Remove
-        GestureDetector(
-          onTap: onRemove,
-          child: Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF3F4F6),
-              borderRadius: BorderRadius.circular(6),
+                    color: AppColors.textPrimary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  file.sizeLabel,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
             ),
-            child: const Icon(Icons.close_rounded,
-                size: 16, color: AppColors.textSecondary),
           ),
-        ),
-      ]),
+          // Remove
+          GestureDetector(
+            onTap: onRemove,
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF3F4F6),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: const Icon(
+                Icons.close_rounded,
+                size: 16,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -834,8 +985,8 @@ class _ComboFieldState extends State<_ComboField> {
     _filtered = query.isEmpty
         ? widget.options
         : widget.options
-            .where((o) => o.toLowerCase().contains(query.toLowerCase()))
-            .toList();
+              .where((o) => o.toLowerCase().contains(query.toLowerCase()))
+              .toList();
 
     _close();
     if (_filtered.isEmpty) return;
@@ -868,15 +1019,20 @@ class _ComboFieldState extends State<_ComboField> {
                   borderRadius: i == 0
                       ? const BorderRadius.vertical(top: Radius.circular(10))
                       : i == _filtered.length - 1
-                          ? const BorderRadius.vertical(
-                              bottom: Radius.circular(10))
-                          : BorderRadius.zero,
+                      ? const BorderRadius.vertical(bottom: Radius.circular(10))
+                      : BorderRadius.zero,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 12),
-                    child: Text(_filtered[i],
-                        style: const TextStyle(
-                            fontSize: 14, color: AppColors.textPrimary)),
+                      horizontal: 14,
+                      vertical: 12,
+                    ),
+                    child: Text(
+                      _filtered[i],
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -913,23 +1069,32 @@ class _ComboFieldState extends State<_ComboField> {
         decoration: InputDecoration(
           hintText: widget.hint,
           hintStyle: const TextStyle(
-              fontSize: 13, color: AppColors.textSecondary),
+            fontSize: 13,
+            color: AppColors.textSecondary,
+          ),
           filled: true,
           fillColor: Colors.white,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
-          suffixIcon: const Icon(Icons.keyboard_arrow_down_rounded,
-              size: 20, color: AppColors.textSecondary),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 13,
+          ),
+          suffixIcon: const Icon(
+            Icons.keyboard_arrow_down_rounded,
+            size: 20,
+            color: AppColors.textSecondary,
+          ),
           border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppColors.border)),
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: AppColors.border),
+          ),
           enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppColors.border)),
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: AppColors.border),
+          ),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide:
-                  const BorderSide(color: AppColors.primary, width: 1.5)),
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+          ),
         ),
       ),
     );
@@ -944,19 +1109,22 @@ class _LookupBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: 44,
-          height: 48,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: const Icon(Icons.badge_outlined,
-              color: AppColors.primary, size: 22),
-        ),
-      );
+    onTap: onTap,
+    child: Container(
+      width: 44,
+      height: 48,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: const Icon(
+        Icons.badge_outlined,
+        color: AppColors.primary,
+        size: 22,
+      ),
+    ),
+  );
 }
 
 // ─── Critical Toggle ──────────────────────────────────────────────────────────
@@ -980,42 +1148,50 @@ class _CriticalToggle extends StatelessWidget {
               : AppColors.border,
         ),
       ),
-      child: Row(children: [
-        Icon(Icons.warning_amber_rounded,
+      child: Row(
+        children: [
+          Icon(
+            Icons.warning_amber_rounded,
             size: 20,
-            color: value
-                ? const Color(0xFFDC2626)
-                : AppColors.textSecondary),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('Critical',
-                style: TextStyle(
+            color: value ? const Color(0xFFDC2626) : AppColors.textSecondary,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Critical',
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                     color: value
                         ? const Color(0xFFDC2626)
-                        : AppColors.textPrimary)),
-            Text(
-              value ? 'Marked as critical' : 'Not critical',
-              style: TextStyle(
-                  fontSize: 11,
-                  color: value
-                      ? const Color(0xFFDC2626).withValues(alpha: 0.7)
-                      : AppColors.textSecondary),
+                        : AppColors.textPrimary,
+                  ),
+                ),
+                Text(
+                  value ? 'Marked as critical' : 'Not critical',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: value
+                        ? const Color(0xFFDC2626).withValues(alpha: 0.7)
+                        : AppColors.textSecondary,
+                  ),
+                ),
+              ],
             ),
-          ]),
-        ),
-        Switch.adaptive(
-          value: value,
-          onChanged: onChanged,
-          activeThumbColor: const Color(0xFFDC2626),
-          activeTrackColor:
-              const Color(0xFFDC2626).withValues(alpha: 0.3),
-          inactiveThumbColor: Colors.white,
-          inactiveTrackColor: const Color(0xFFD1D5DB),
-        ),
-      ]),
+          ),
+          Switch.adaptive(
+            value: value,
+            onChanged: onChanged,
+            activeThumbColor: const Color(0xFFDC2626),
+            activeTrackColor: const Color(0xFFDC2626).withValues(alpha: 0.3),
+            inactiveThumbColor: Colors.white,
+            inactiveTrackColor: const Color(0xFFD1D5DB),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -1030,24 +1206,26 @@ class _FieldLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => RichText(
-        text: TextSpan(
-          text: label,
-          style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary),
-          children: isRequired
-              ? const [
-                  TextSpan(
-                    text: ' *',
-                    style: TextStyle(
-                        color: Color(0xFFDC2626),
-                        fontWeight: FontWeight.w700),
-                  )
-                ]
-              : [],
-        ),
-      );
+    text: TextSpan(
+      text: label,
+      style: const TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        color: AppColors.textSecondary,
+      ),
+      children: isRequired
+          ? const [
+              TextSpan(
+                text: ' *',
+                style: TextStyle(
+                  color: Color(0xFFDC2626),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ]
+          : [],
+    ),
+  );
 }
 
 // ─── Card ─────────────────────────────────────────────────────────────────────
@@ -1058,19 +1236,20 @@ class _Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
-          boxShadow: const [
-            BoxShadow(
-                color: Color(0x06000000),
-                blurRadius: 8,
-                offset: Offset(0, 2)),
-          ],
+    width: double.infinity,
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: AppColors.border),
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x06000000),
+          blurRadius: 8,
+          offset: Offset(0, 2),
         ),
-        child: child,
-      );
+      ],
+    ),
+    child: child,
+  );
 }

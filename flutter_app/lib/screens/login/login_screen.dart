@@ -39,6 +39,13 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isPasswordHidden = true;
 
   @override
+  void dispose() {
+    staffController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -91,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextField(
                     controller: staffController,
                     decoration: InputDecoration(
-                      hintText: 'curtis.feilty',
+                      hintText: 'Staff Number',
                       filled: true,
                       fillColor: const Color(0xFFF8FAFC),
 
@@ -138,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: passwordController,
                     obscureText: isPasswordHidden,
                     decoration: InputDecoration(
-                      hintText: 'H6EC37h*',
+                      hintText: 'Password',
 
                       filled: true,
                       fillColor: const Color(0xFFF8FAFC),

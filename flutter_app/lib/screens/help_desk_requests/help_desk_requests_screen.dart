@@ -813,10 +813,12 @@ class _Toolbar extends StatelessWidget {
             Expanded(
               child: DropdownButtonFormField<String>(
                 initialValue: groupBy,
+                isExpanded: true,
                 decoration: const InputDecoration(
                   labelText: 'Group By',
                   prefixIcon: Icon(Icons.group_work_outlined),
                 ),
+
                 items: groupByOptions
                     .map(
                       (option) =>

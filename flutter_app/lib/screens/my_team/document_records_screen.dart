@@ -735,7 +735,16 @@ class _DocumentRecordsScreenState extends State<DocumentRecordsScreen> {
           _PlainFilterButton(label: 'Filters', onTap: _showListFilters),
           TextButton(
             onPressed: _activeFilterCount == 0 ? null : _clearFilters,
-            child: Text('Clear ($_activeFilterCount)'),
+            style: TextButton.styleFrom(
+              foregroundColor: const Color(0xFF174A97),
+              disabledForegroundColor: const Color(
+                0xFF174A97,
+              ).withValues(alpha: 0.5),
+            ),
+            child: Text(
+              'Clear ($_activeFilterCount)',
+              style: const TextStyle(fontWeight: FontWeight.w800),
+            ),
           ),
         ],
       ),
@@ -1988,7 +1997,16 @@ class _PersonDocumentRecordsScreenState
                 ),
                 TextButton(
                   onPressed: _activeFilterCount == 0 ? null : _clearFilters,
-                  child: Text('Clear ($_activeFilterCount)'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: const Color(0xFF174A97),
+                    disabledForegroundColor: const Color(
+                      0xFF174A97,
+                    ).withValues(alpha: 0.5),
+                  ),
+                  child: Text(
+                    'Clear ($_activeFilterCount)',
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
                 ),
               ],
             ),
@@ -2498,178 +2516,133 @@ class _WebLikeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = isMeSection ? const Color(0xFFDCEEFF) : const Color(0xFFC9DFF6);
-    final primaryColor = isMeSection ? const Color(0xFF174A97) : const Color(0xFF1F4E8C);
-    final topPad = isMeSection
-        ? MediaQuery.of(context).padding.top
-        : MediaQuery.of(context).padding.top + 16;
-    final afterLogo = isMeSection ? 20.0 : 12.0;
-    final avatarRadius = isMeSection ? 28.0 : 18.0;
-    final bottomPad = isMeSection ? 28.0 : 16.0;
-    final cornerRadius = isMeSection ? 46.0 : 32.0;
+    // Unified with the Personal Details header (AppHeaderWidget) so that
+    // Me / My Team / My Client Groups Document Records screens share the
+    // same blue header color, corner radius, greeting and title typography.
+    const bgColor = Color(0xFFC9DFF6);
+    const primaryColor = Color(0xFF1F4E8C);
 
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(cornerRadius),
-          bottomRight: Radius.circular(cornerRadius),
+          bottomLeft: Radius.circular(32),
+          bottomRight: Radius.circular(32),
         ),
       ),
       padding: EdgeInsets.only(
-        top: topPad,
-        bottom: bottomPad,
-        left: 16,
-        right: 16,
+        top: MediaQuery.of(context).padding.top + 16,
+        bottom: 24,
+        left: 20,
+        right: 20,
       ),
-      child: SafeArea(
-        bottom: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Logo centered at top
-            Center(
-              child: Image.asset(
-                'assets/images/mannai_logo.jpeg',
-                height: 48,
-                fit: BoxFit.contain,
-                color: bgColor,
-                colorBlendMode: BlendMode.multiply,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          // Back arrow (left-aligned) — identical styling to AppHeaderWidget.
+          if (onBack != null)
+            Positioned(
+              left: 0,
+              top: 0,
+              child: GestureDetector(
+                onTap: onBack,
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: primaryColor.withValues(alpha: 0.15),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: primaryColor,
+                    size: 18,
+                  ),
+                ),
               ),
             ),
-            SizedBox(height: afterLogo),
-            // Back button (top-left, positioned absolutely via row spacer)
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (onBack != null)
-                  Padding(
-                    padding: isMeSection ? EdgeInsets.zero : EdgeInsets.zero,
-                    child: Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        color: primaryColor.withValues(alpha: 0.12),
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        tooltip: 'Back',
-                        padding: EdgeInsets.zero,
-                        onPressed: onBack,
-                        icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                        color: primaryColor,
-                        iconSize: 16,
-                      ),
-                    ),
+
+          // Centred logo + greeting + title, followed by page-specific
+          // content (subtitle/avatar row and the caller-supplied child).
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Image.asset(
+                  'assets/images/mannai_logo.jpeg',
+                  height: 48,
+                  fit: BoxFit.contain,
+                  color: bgColor,
+                  colorBlendMode: BlendMode.multiply,
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Center(
+                child: Text(
+                  'Hi Curtis Feitty',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: primaryColor,
+                    letterSpacing: 0.2,
                   ),
-                if (initials != null && isMeSection) ...[
-                  const SizedBox(width: 12),
-                  CircleAvatar(
-                    radius: avatarRadius,
-                    backgroundColor: Colors.white,
-                    child: Text(
-                      initials!,
-                      style: TextStyle(
-                        color: primaryColor,
-                        fontSize: isMeSection ? 24 : 16,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Center(
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: primaryColor,
+                    letterSpacing: 0.3,
                   ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          title,
-                          style: TextStyle(
-                            color: primaryColor,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w800,
+                ),
+              ),
+              if (subtitle.isNotEmpty) ...[
+                const SizedBox(height: 6),
+                Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (initials != null) ...[
+                        CircleAvatar(
+                          radius: 16,
+                          backgroundColor: Colors.white,
+                          child: Text(
+                            initials!,
+                            style: const TextStyle(
+                              color: primaryColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w900,
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
+                        const SizedBox(width: 8),
+                      ],
+                      Flexible(
+                        child: Text(
                           subtitle,
+                          textAlign: TextAlign.center,
                           style: const TextStyle(
-                            color: Color(0xFF6B7280),
-                            fontSize: 14,
+                            color: Color(0xFF4A5F78),
+                            fontSize: 13,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ] else if (initials != null) ...[
-                  CircleAvatar(
-                    radius: avatarRadius,
-                    backgroundColor: Colors.white,
-                    child: Text(
-                      initials!,
-                      style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w900,
                       ),
-                    ),
+                    ],
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: TextStyle(
-                            color: primaryColor,
-                            fontSize: 21,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          subtitle,
-                          style: const TextStyle(
-                            color: Color(0xFF7B8B9B),
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ] else
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: TextStyle(
-                            color: primaryColor,
-                            fontSize: 21,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          subtitle,
-                          style: const TextStyle(
-                            color: Color(0xFF7B8B9B),
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                ),
               ],
-            ),
-            SizedBox(height: isMeSection ? 30 : 14),
-            child,
-          ],
-        ),
+              const SizedBox(height: 20),
+              child,
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -2699,11 +2672,17 @@ class _SearchBox extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF9CA3AF)),
-          prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF9CA3AF)),
+          prefixIcon: const Icon(
+            Icons.search_rounded,
+            color: Color(0xFF9CA3AF),
+          ),
           suffixIcon: Icon(trailingIcon, color: const Color(0xFF9CA3AF)),
           filled: true,
           fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
@@ -2753,14 +2732,9 @@ class _FilterPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foreground = selected
-        ? Colors.white
-        : isBrightBackground
-            ? const Color(0xFF174A97)
-            : const Color(0xFFE5E7EB);
-    final borderColor = isBrightBackground
-        ? const Color(0xFF174A97).withValues(alpha: 0.3)
-        : const Color(0xFF7A5960);
+    final foreground = selected ? Colors.white : const Color(0xFF174A97);
+    final borderColor = const Color(0xFF174A97).withValues(alpha: 0.35);
+
     return Container(
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
@@ -2808,9 +2782,6 @@ class _PlainFilterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = isBrightBackground
-        ? const Color(0xFF174A97).withValues(alpha: 0.3)
-        : const Color(0xFF7A5960);
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: OutlinedButton.icon(
@@ -2818,10 +2789,10 @@ class _PlainFilterButton extends StatelessWidget {
         icon: const Icon(Icons.tune_rounded),
         label: Text(label),
         style: OutlinedButton.styleFrom(
-          foregroundColor: isBrightBackground
-              ? const Color(0xFF174A97)
-              : Colors.white,
-          side: BorderSide(color: borderColor),
+          foregroundColor: const Color(0xFF174A97),
+          side: BorderSide(
+            color: const Color(0xFF174A97).withValues(alpha: 0.35),
+          ),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         ),
       ),
